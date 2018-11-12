@@ -1,0 +1,114 @@
+<!--index.wxml-->
+<view class="index-container">
+  <view class='index-header'>
+    <view class='header-input'>
+      <input class='input-box' placeholder="搜索商品、会员、条码"></input>
+      <i class="icon-search" id="q_i">
+        <image src='/pages/images/icon-search.png'></image>
+      </i>
+    </view>
+    <view class='scan-icon' bindtap="scanClick">
+      <image src='/pages/images/scan.png' class='scan-icon-img'></image>
+    </view>
+  </view>
+  <view class="recommend">
+    <view class="swiper-container">
+      <swiper autoplay="auto" interval="5000" duration="500" current="{{swiperCurrent}}" bindchange="swiperChange" class="swiper">
+        <block wx:for="{{slider}}" wx:key="unique">
+          <swiper-item data-id="{{item.id}}" data-url="{{item.linkUrl}}">
+            <image src="{{item.picUrl}}" class="img"></image>
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class="dots">
+        <block wx:for="{{slider}}" wx:key="unique">
+          <view class="dot{{index == swiperCurrent ? ' active' : ''}}" bindtap="chuangEvent" id="{{index}}">{{index+1}}</view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+
+  <view class='index-content'>
+    <view class='content-ul'>
+      <view class='content-li'>
+        <view class='li-img'>
+          <image src='/pages/images/goods.png' class=''></image>
+        </view>
+        <view class='li-text'>
+          <text>商品管理</text>
+        </view>
+      </view>
+      <view class='content-li'>
+        <view class='li-img'>
+          <image src='/pages/images/sale-order.png' class=''></image>
+        </view>
+        <view class='li-text'>
+          <text>销售单</text>
+        </view>
+      </view>
+      <view class='content-li li-right'>
+        <view class='li-img'>
+          <image src='/pages/images/order.png' class=''></image>
+        </view>
+        <view class='li-text'>
+          <text>采购单</text>
+        </view>
+      </view>
+    </view>
+    <view class='content-ul'>
+      <view class='content-li'>
+        <view class='li-img'>
+          <image src='/pages/images/customer.png' class=''></image>
+        </view>
+        <view class='li-text'>
+          <text>用户管理</text>
+        </view>
+      </view>
+      <view class='content-li'>
+        <view class='li-img'>
+          <image src='/pages/images/depot.png' class=''></image>
+        </view>
+        <view class='li-text'>
+          <text>库存管理</text>
+        </view>
+      </view>
+      <view class='content-li li-right'>
+        <view class='li-img'>
+          <image src='/pages/images/print.png' class=''></image>
+        </view>
+        <view class='li-text'>
+          <text>打印管理</text>
+        </view>
+      </view>
+    </view>
+    <view class='content-ul'>
+      <view class='content-li'>
+        <view class='li-img'>
+          <image src='/pages/images/report.png' class=''></image>
+        </view>
+        <view class='li-text'>
+          <text>报表管理</text>
+        </view>
+      </view>
+      <view class='content-li'>
+        <view class='li-img'>
+          <image src='/pages/images/store.png' class=''></image>
+        </view>
+        <view class='li-text'>
+          <text>店铺信息</text>
+        </view>
+      </view>
+      <view class='content-li li-right'>
+        <view class='li-img'>
+          <image src='/pages/images/wl.png' class=''></image>
+        </view>
+        <view class='li-text'>
+          <text>物流管理</text>
+        </view>
+      </view>
+    </view>
+
+  </view>
+
+</view>

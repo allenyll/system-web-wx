@@ -1,0 +1,84 @@
+/* pages/my/my.wxss */
+.my-header {
+  width: 100%;
+  height: 90px;
+  background-color: #0387FE;
+}
+
+.avatar {
+  padding: 2px 0px 0px 15px;
+  float:left;
+}
+
+.userinfo-avatar {
+  width: 70px;
+  height: 70px;
+  border: 1px solid#00BFFF;
+  border-radius:35px;
+}
+
+.my-info {
+  float:left; 
+  width:100px; 
+  padding:10px 0px 0px 17px;
+  color:white;
+}
+
+.my-info-login{
+  color: white;
+  font-size: 14px; 
+  width:60px;
+  height:30px;
+  line-height:30px;
+  background: #0387FE;
+  border:1px solid white;
+  border-radius: 8px;
+  float: left;
+}
+
+.my-name{
+  font-size: 23px;
+}
+
+.my-phone {
+  width:84px;
+  height: 17px;
+  font-size:13px;
+  margin-top:3px;
+  border:1px solid #00BFFF;
+  border-radius: 15px;
+  padding: 2px;
+  text-align:center;
+}
+
+.my-info-detail{
+  float:right;
+  color:white;
+  margin-right:15px;
+  margin-top:25px;
+  font-size:25px;
+}
+
+.my-ul{
+  height:50px;line-height:50px;border-bottom:1px solid #e6e6e6;
+}
+
+.icon{
+  float:left; margin-left:8px;height:50px
+}
+
+.icon-image{
+  width:26px;height:26px; margin-top:12px;
+}
+
+.li-name{
+  float:left; font-size:17px;margin-left:12px;height:50px
+}
+
+.icon-arrow{
+  float:right; margin-right:8px;height:50px
+}
+
+.arrow-image{
+  width:18px;height:18px;margin-top:16px;
+}
