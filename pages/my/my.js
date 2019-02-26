@@ -1,16 +1,20 @@
 // pages/my/my.js
 //获取应用实例
+const http = require('../../utils/http.js')  // 引入
+const dialog = require('../../utils/dialog.js')  // 引入
 const app = getApp()
 
 Page({
-
   /**
    * 页面的初始数据
    */
   data: {
     userInfo: null,
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    showPhone: false,
+    phone: '',
+    point: 0
   },
 
   /**
@@ -24,6 +28,7 @@ Page({
                 if (res.authSetting['scope.userInfo']) {
                     wx.getUserInfo({
                         success: function (res) {
+                            that.data.hasUserInfo = true;
                             //从数据库获取用户信息
                             that.queryUserInfo();
                             //用户已经授权过
@@ -43,59 +48,140 @@ Page({
           //用户按了允许授权按钮
           var that = this;
           //插入登录的用户的相关信息到数据库
-          wx.request({
-            url:'https://localhost:8080/wx/wxLogin',
-              data: e.detail.userInfo,
-              method: "POST",
-              header: {
-                'Authorization': 'Bearer ' + app.globalData.token,
-                'content-type': 'application/json',
-              },
-              success: function (res) {
-                  //从数据库获取用户信息
-                  that.queryUserInfo();
-                  console.log("插入小程序登录用户信息成功！");
-              }
-          });
+          http('/wx/wxLogin', e.detail.userInfo, '', 'post').then(res => {
+            //从数据库获取用户信息
+            that.queryUserInfo();
+          })
           //授权成功后，跳转进入小程序首页
           wx.switchTab({
               url: '/pages/my/my'  
           })
       } else {
           //用户按了拒绝按钮
-          wx.showModal({
-              title:'警告',
-              content:'您点击了拒绝授权，将无法进入小程序，请授权之后再进入!!!',
-              showCancel:false,
-              confirmText:'返回授权',
-              success:function(res){
-                  if (res.confirm) {
-                      console.log('用户点击了“返回授权”')
-                  } 
-              }
-          })
+          dialog.dialog('警告', '您点击了拒绝授权，将无法进入小程序，请授权之后再进入!!!', false, '返回授权')
       }
   },
 
   queryUserInfo:function(){
     var that = this;
-    wx.request({
-      url: 'https://localhost:8080/wx/queryUserByOpenId?openid=' + app.globalData.openid,
-      method: "POST",
-      header: {
-        'Authorization': 'Bearer ' + app.globalData.token,
-      },
-      success: function (res) {
-        console.log(res.data);
-        app.globalData.userInfo = res.data.customer;
-        console.log(app.globalData.userInfo);
-        that.setData({
-          userInfo: app.globalData.userInfo,
-          hasUserInfo: true
-        })
-        console.log(that.data.canIUse);
+    http('/wx/queryUserByOpenId?openid=' + app.globalData.openid,'', '', 'post').then(res => {
+      var user = res.customer;
+      if (undefined == user) {
+        dialog.dialog('警告', '授权失败!!!', false, '返回授权')
+        return
       }
+      var customerPoint = res.customerPoint;
+      var point = 0;
+      if (undefined != customerPoint) {
+        point = customerPoint.point;
+      }
+      app.globalData.userInfo = user;
+      if (null != user.phone && '' != user.phone) {
+        var phoneNumber = user.phone
+        that.setData({
+          showPhone: true,
+          phone: phoneNumber.substring(0, 3) + '******' + phoneNumber.substring(9, 11)
+        })
+      }
+      that.setData({
+        userInfo: app.globalData.userInfo,
+        hasUserInfo: true,
+        point: customerPoint == undefined ? 0 : customerPoint.point
+      })
     })
+  },
+
+  /**
+   * 获取用户手机号
+   */
+  getPhoneNumber: function(e){
+    var that = this;
+    if(undefined != e.detail.iv){
+      wx.login({
+        success: res => {
+          if (res.code) {
+            const param = {
+              code: res.code,
+              iv: e.detail.iv,
+              encryptedData: e.detail.encryptedData
+            }
+            http('/wx/getPhoneNumber', param, '', 'post').then(res => {
+              console.log(res)
+              that.queryUserInfo();
+              //用户已经授权过
+              wx.switchTab({
+                url: '/pages/my/my'
+              })
+            })
+          }
+        }
+      })
+    }else{
+      dialog.dialog('警告', '授权失败', false, '绑定手机失败，请重新授权绑定')
+    }
+  },
+
+  setAccount: function(){
+    var that = this;
+    if (that.data.hasUserInfo == false) {
+      wx.navigateTo({
+        url: '/pages/login/login?mark=/pages/my/account/account',
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/my/account/account?id=' + escape(app.globalData.userInfo.pkCustomerId),
+      })
+    }
+  },
+
+  /**
+   * 积分详情页面
+   */
+  clickPoint: function() {
+    var that = this;
+    if (that.data.hasUserInfo == false) {
+      wx.navigateTo({
+        url: '/pages/login/login?mark=/pages/my/point/point',
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/my/point/point?id=' + escape(app.globalData.userInfo.pkCustomerId),
+      })
+    }
+  },
+
+  clickCash: function() {
+    wx.navigateTo({
+      url: '/pages/my/cash/cash',
+      success: function(res) {},
+      fail: function(res) {},
+      complete: function(res) {},
+    })
+  },
+
+  clickVip: function() {
+    wx.navigateTo({
+      url: '/pages/my/vip/vip',
+      success: function (res) { },
+      fail: function (res) { },
+      complete: function (res) { },
+    })
+  },
+
+  /**
+   * 订单管理点击事件
+   */
+  clickOrder: function(){
+    var that = this;
+    if(that.data.hasUserInfo == false){
+      wx.navigateTo({
+        url: '/pages/login/login?mark=/pages/my/order-list/order',
+      })
+    }else{
+      wx.navigateTo({
+        url: '/pages/my/order-list/order?id=' + escape(app.globalData.userInfo.pkCustomerId),
+      })
+    }
   },
 
   /**
@@ -109,7 +195,27 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    var that = this;
+    
+    // 查看是否授权
+    wx.getSetting({
+      success: function (res) {
+        if (res.authSetting['scope.userInfo']) {
+          wx.getUserInfo({
+            success: function (res) {
+              that.data.hasUserInfo = true;
+              //从数据库获取用户信息
+              that.queryUserInfo();
+              //用户已经授权过
+              wx.switchTab({
+                url: '/pages/my/my'
+              })
+            }
+          });
+        }
+      }
+    })
+    
   },
 
   /**

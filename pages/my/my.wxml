@@ -11,127 +11,121 @@
         <button class='my-info-login' wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo">登录</button>
         <block wx:else>
           <view class='my-name'>{{userInfo.nickName}}</view>
-          <view class='my-phone' >132****3282</view>
+          <view class='my-phone' wx:if="{{showPhone}}">{{phone}}</view>
+          <view wx:else class='wx_phone'>
+            <button class='my-info-phone' bindgetphonenumber="getPhoneNumber" open-type="getPhoneNumber"><view class="iconfont icon-phone" style='display:inline;font-size:12px;'></view>绑定手机号</button>
+          </view>
         </block>
       </view>
-      <view class='my-info-detail' >
+      
+      <view class='my-info-detail' bindtap='setAccount'>
         <image src='/pages/images/right-arrow.png' style='width:20px;height:20px;'></image>
       </view>
+
+      <view class="member-content">
+        <view class='a-item' bindtap='clickPoint'>
+          <wxc-icon type='purse' size='{{iconSize-10}}' color='#69C3AA' style='margin:15rpx 0 10rpx 0;'>
+          </wxc-icon>
+          <view class='my'>
+            积分:
+            <view style='padding:0 10rpx;color: #69C3AA;font-weight: bold;'> {{point}}
+            </view>
+          </view>
+        </view>
+
+        <view class='a-item' bindtap='clickCash'>
+          <wxc-icon type='yen' size='{{iconSize-10}}' color='#666666' style='margin:15rpx 0 10rpx 0;'>
+          </wxc-icon>
+          <view class='my'>
+            余额:
+          <view style='padding: 0 10rpx;color: #666666;font-weight: bold;'>0</view>
+          </view>
+        </view>
+
+        <view class='a-item'>
+          <wxc-icon type='after-sales' size='{{iconSize-10}}' color='#FF5777' style='margin:15rpx 0 10rpx 0;'>
+          </wxc-icon>
+          <view class='my'>
+            提现中:
+            <view style='padding: 0 10rpx;color: #FF5777;font-weight: bold;'>0</view>
+          </view>
+        </view>
+
+        <view class='a-item-right'>
+          <view class='my-member' bindtap='clickVip'>我的会员</view>
+        </view>
+      </view>
   </view>
-  <view class='my-content'>
-    <view class='my-ul'>
-      <view class='icon'>
-        <image class='icon-image' src='/pages/images/goods.png' ></image>
-      </view>
-      <view class='li-name'>
-        <text>商品管理</text>
-      </view>
-      <view class='icon-arrow'>
-        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
-      </view>
-    </view>
-    <view class='my-ul'>
-      <view class='icon'>
-        <image class='icon-image' src='/pages/images/depot.png' ></image>
-      </view>
-      <view class='li-name'>
-        <text>仓库管理</text>
-      </view>
-      <view class='icon-arrow'>
-        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
+
+  <!-- 分割段 -->
+  <view class='line-view' style='width:100%;height:25rpx;background-color:#f4f4f4;'></view>
+
+  <!-- 内容栏 -->
+  <view class='my-content' style=''>
+    <view class="item">
+      <view bindtap='clickOrder' hover-class="none" class="a">
+        <wxc-icon type='feedback' size='{{iconSize}}' color='{{iconColor}}' style='margin:15rpx 0 10rpx 0;'></wxc-icon>
+        <text class="txt">订单管理</text>
       </view>
     </view>
-    <view class='my-ul'>
-      <view class='icon'>
-        <image class='icon-image' src='/pages/images/wl.png' ></image>
-      </view>
-      <view class='li-name'>
-        <text>物流管理</text>
-      </view>
-      <view class='icon-arrow'>
-        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
-      </view>
+    <view class="item">
+      <navigator url="/pages/select-address/index" hover-class="none" class="a">
+        <wxc-icon type='address' size='{{iconSize}}' color='{{iconColor}}' style='margin:15rpx 0 10rpx 0;'></wxc-icon>
+        <text class="txt">收货地址</text>
+      </navigator>
     </view>
-    <view style='height:10px;background:#F5F5F5;'>
+    <view class="item no-border-right">
+      <navigator url="/pages/ucenter/location/location" hover-class="none" class="a">
+        <wxc-icon type='location' size='{{iconSize}}' color='{{iconColor}}' style='margin:15rpx 0 10rpx 0;'></wxc-icon>
+        <text class="txt">到店里</text>
+      </navigator>
     </view>
-    <view class='my-ul'>
-      <view class='icon'>
-        <image class='icon-image' src='/pages/images/customer.png' ></image>
-      </view>
-      <view class='li-name'>
-        <text>客户管理</text>
-      </view>
-      <view class='icon-arrow'>
-        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
-      </view>
+
+    <view class="item">
+      <navigator url="/pages/ucenter/mycoupons/index" hover-class="none" class="a">
+        <wxc-icon type='coupon' size='{{iconSize}}' color='{{iconColor}}' style='margin:15rpx 0 10rpx 0;'></wxc-icon>
+        <text class="txt">优惠券</text>
+      </navigator>
     </view>
-    <view class='my-ul'>
-      <view class='icon'>
-        <image class='icon-image' src='/pages/images/gys.png' ></image>
-      </view>
-      <view class='li-name'>
-        <text>供应商管理</text>
-      </view>
-      <view class='icon-arrow'>
-        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
-      </view>
+    <view class="item">
+      <navigator url="" hover-class="none" class="a">
+        <wxc-icon type='rate' size='{{iconSize}}' color='{{iconColor}}' style='margin:15rpx 0 10rpx 0;'></wxc-icon>
+        <text class="txt" style=''>积分兑换</text>
+      </navigator>
     </view>
-    <view class='my-ul'>
-      <view class='icon'>
-        <image class='icon-image' src='/pages/images/account.png' ></image>
-      </view>
-      <view class='li-name'>
-        <text>账户管理</text>
-      </view>
-      <view class='icon-arrow'>
-        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
-      </view>
+    <view class="item no-border-right">
+      <navigator url="/pages/target/index" hover-class="none" class="a">
+        <wxc-icon type='footprint' size='{{iconSize}}' color='lightgray' style='margin:15rpx 0 10rpx 0;'></wxc-icon>
+        <text class="txt" style='color:lightgray;text-decoration: line-through;'>足迹</text>
+      </navigator>
     </view>
-    <view style='height:10px;background:#F5F5F5;'>
+
+    <view class="item item-bottom" bindtap='makePhoneCall'>
+      <navigator url="" hover-class="none" class="a">
+        <wxc-icon type='group' size='{{iconSize}}' color='{{iconColor}}' style='margin:15rpx 0 10rpx 0;'></wxc-icon>
+        <text class="txt">联系客服</text>
+      </navigator>
     </view>
-    <view class='my-ul'>
-      <view class='icon'>
-        <image class='icon-image' src='/pages/images/setting.png' ></image>
-      </view>
-      <view class='li-name'>
-        <text>系统设置</text>
-      </view>
-      <view class='icon-arrow'>
-        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
-      </view>
+    <view class="item item-bottom" bindtap="aboutUs">
+      <navigator url="url" hover-class="none" class="a">
+        <wxc-icon type='help' size='{{iconSize}}' color='{{iconColor}}' style='margin:15rpx 0 10rpx 0;'></wxc-icon>
+        <text class="txt">关于我们</text>
+      </navigator>
     </view>
-    <view class='my-ul'>
-      <view class='icon'>
-        <image class='icon-image' src='/pages/images/service.png' ></image>
-      </view>
-      <view class='li-name'>
-        <text>我的客服</text>
-      </view>
-      <view class='icon-arrow'>
-        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
-      </view>
+    <view class="item no-border-bottom">
+      <navigator url="/pages/ucenter/feedback/feedback" hover-class="none" class="a">
+        <wxc-icon type='comment' size='{{iconSize}}' color='{{iconColor}}' style='margin:15rpx 0 10rpx 0;'></wxc-icon>
+        <text class="txt">意见反馈</text>
+      </navigator>
     </view>
-    <view class='my-ul'>
-      <view class='icon'>
-        <image class='icon-image' src='/pages/images/about-us.png' ></image>
-      </view>
-      <view class='li-name'>
-        <text>关于我们</text>
-      </view>
-      <view class='icon-arrow'>
-        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
-      </view>
-    </view>
-     <view class='my-ul'>
-      <view class='icon'>
-        <image class='icon-image' src='/pages/images/advice.png' ></image>
-      </view>
-      <view class='li-name'>
-        <text>意见反馈</text>
-      </view>
-      <view class='icon-arrow'>
-        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
-      </view>
-    </view>
+
   </view>
+
+ <!-- 分割段 -->
+  <view class='line-view' style='width:100%;height:180rpx;background-color:#f4f4f4;'></view>
+  
+<view class="version" style='margin-top:10rpx;font-size:22rpx;text-align:center;'>Copyright © 2017-2018 allenyll(GitHub ID)</view>
+ <view class='line-view' style='width:100%;height:20rpx;background-color:#f4f4f4;'></view>
+
 </view>
+ 

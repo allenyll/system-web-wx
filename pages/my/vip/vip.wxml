@@ -1,0 +1,7 @@
+<view class="vip-container">
+  <view class="vip-header" style='background-color:	#FFA54F;'>
+    <view class='vip-name'>
+      普通会员
+    </view>
+  </view>
+</view>

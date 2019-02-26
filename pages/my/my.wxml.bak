@@ -1,0 +1,137 @@
+<view class='my-container'>
+  <view class='my-header' >
+      <view class='avatar'>
+        <image wx:if="{{!hasUserInfo}}" bindtap="bindViewTap" class="userinfo-avatar" src="/pages/images/no-login.png" mode="cover"></image>
+        <block wx:else>
+          <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover">
+          </image>
+        </block>
+      </view>
+      <view class='my-info'>
+        <button class='my-info-login' wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo">登录</button>
+        <block wx:else>
+          <view class='my-name'>{{userInfo.nickName}}</view>
+          <view class='my-phone' >132****3282</view>
+        </block>
+      </view>
+      <view class='my-info-detail' >
+        <image src='/pages/images/right-arrow.png' style='width:20px;height:20px;'></image>
+      </view>
+  </view>
+  <view class='my-content'>
+    <view class='my-ul'>
+      <view class='icon'>
+        <image class='icon-image' src='/pages/images/goods.png' ></image>
+      </view>
+      <view class='li-name'>
+        <text>商品管理</text>
+      </view>
+      <view class='icon-arrow'>
+        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
+      </view>
+    </view>
+    <view class='my-ul'>
+      <view class='icon'>
+        <image class='icon-image' src='/pages/images/depot.png' ></image>
+      </view>
+      <view class='li-name'>
+        <text>仓库管理</text>
+      </view>
+      <view class='icon-arrow'>
+        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
+      </view>
+    </view>
+    <view class='my-ul'>
+      <view class='icon'>
+        <image class='icon-image' src='/pages/images/wl.png' ></image>
+      </view>
+      <view class='li-name'>
+        <text>物流管理</text>
+      </view>
+      <view class='icon-arrow'>
+        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
+      </view>
+    </view>
+    <view style='height:10px;background:#F5F5F5;'>
+    </view>
+    <view class='my-ul'>
+      <view class='icon'>
+        <image class='icon-image' src='/pages/images/customer.png' ></image>
+      </view>
+      <view class='li-name'>
+        <text>客户管理</text>
+      </view>
+      <view class='icon-arrow'>
+        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
+      </view>
+    </view>
+    <view class='my-ul'>
+      <view class='icon'>
+        <image class='icon-image' src='/pages/images/gys.png' ></image>
+      </view>
+      <view class='li-name'>
+        <text>供应商管理</text>
+      </view>
+      <view class='icon-arrow'>
+        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
+      </view>
+    </view>
+    <view class='my-ul'>
+      <view class='icon'>
+        <image class='icon-image' src='/pages/images/account.png' ></image>
+      </view>
+      <view class='li-name'>
+        <text>账户管理</text>
+      </view>
+      <view class='icon-arrow'>
+        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
+      </view>
+    </view>
+    <view style='height:10px;background:#F5F5F5;'>
+    </view>
+    <view class='my-ul'>
+      <view class='icon'>
+        <image class='icon-image' src='/pages/images/setting.png' ></image>
+      </view>
+      <view class='li-name'>
+        <text>系统设置</text>
+      </view>
+      <view class='icon-arrow'>
+        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
+      </view>
+    </view>
+    <view class='my-ul'>
+      <view class='icon'>
+        <image class='icon-image' src='/pages/images/service.png' ></image>
+      </view>
+      <view class='li-name'>
+        <text>我的客服</text>
+      </view>
+      <view class='icon-arrow'>
+        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
+      </view>
+    </view>
+    <view class='my-ul'>
+      <view class='icon'>
+        <image class='icon-image' src='/pages/images/about-us.png' ></image>
+      </view>
+      <view class='li-name'>
+        <text>关于我们</text>
+      </view>
+      <view class='icon-arrow'>
+        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
+      </view>
+    </view>
+     <view class='my-ul'>
+      <view class='icon'>
+        <image class='icon-image' src='/pages/images/advice.png' ></image>
+      </view>
+      <view class='li-name'>
+        <text>意见反馈</text>
+      </view>
+      <view class='icon-arrow'>
+        <image class='arrow-image' src='/pages/images/right-arrow-d3.png'></image>
+      </view>
+    </view>
+  </view>
+</view>

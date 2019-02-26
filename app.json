@@ -1,13 +1,19 @@
 {
   "pages":[
-    "pages/index/index",
     "pages/my/my",
-    "pages/logs/logs"
+    "pages/my/order-list/order",
+    "pages/my/account/account",
+    "pages/my/point/point",
+    "pages/my/cash/cash",
+    "pages/my/vip/vip",
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/login/login"
   ],
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "SNU进销存",
+    "navigationBarTitleText": "SNU CHIC",
     "navigationBarTextStyle":"black"
   },
   "tabBar": {

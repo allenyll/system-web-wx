@@ -8,7 +8,7 @@ App({
       success: res => {
         if (res.code) {
           wx.request({
-            url: 'https://localhost:8080/wx/auth',
+            url: that.globalData.baseUrl+'/wx/auth',
             data: {
               code: res.code
             },
@@ -20,7 +20,6 @@ App({
               console.log(res.data.token);
               var token = res.data.token;
               var openid = token.substring(token.indexOf("#") + 1, token.length);
-              console.log(openid);
               that.globalData.openid = openid;
               that.globalData.token = token;
             }
@@ -31,11 +30,23 @@ App({
   },
 
   /**
+   * 动态设置页面标题
+   */
+  setPageTitle: function(title) {
+    wx.setNavigationBarTitle({
+      title: title //页面标题为路由参数
+    })
+  },
+
+  /**
    * 设置全局变量
    */
   globalData: {
     userInfo:null,
     openid: 0,
-    token:''
+    token:'',
+    baseUrl: 'https://localhost',
+    bearer: 'Bearer ',
+    logType: ',JWT_WX'
   }
 })
