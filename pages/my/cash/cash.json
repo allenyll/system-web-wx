@@ -1,5 +1,8 @@
 {
-  "navigationBarTitleText": "充值中心",
+  "navigationBarTitleText": "余额",
   "navigationBarBackgroundColor": "#0387FE",
-  "navigationBarTextStyle": "white"
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "wxc-icon": "../../../dist/packages/@minui/wxc-icon/dist/index"
+  }
 }

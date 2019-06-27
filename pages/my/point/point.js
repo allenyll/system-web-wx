@@ -57,7 +57,7 @@ Page({
     var param = {
       customerId: app.globalData.userInfo.pkCustomerId
     }
-    http('/point/getPoint', param, '', 'POST').then(res => {
+    http('/system-web/customerPoint/getPoint', param, '', 'POST').then(res => {
       that.setData({
         'canUseIntegral': Number(res.customerPoint.point) - Number(res.customerPoint.used),
         'totalIntegral': res.customerPoint.point
@@ -94,7 +94,7 @@ Page({
       'action': action,
       'page': page || 1
     }
-    http('/point/getPointDetail', param, '', 'post').then(res => {
+    http('/system-web/customerPoint/getPointDetail', param, '', 'post').then(res => {
       switch(type){
         // 收入消息
         case 'income':

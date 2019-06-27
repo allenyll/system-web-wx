@@ -12,10 +12,11 @@ var dialog = function(title, content, showCancel, confirmText){
   })
 },
 
-showToast = function(title, icon, time){
+showToast = function(title, icon, image, time){
     wx.showToast({
     title: title,
     icon: icon,
+    image: image,
     duration: time
   })
  }

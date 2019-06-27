@@ -1,0 +1,174 @@
+<scroll-view class="container" style="height: {{winHeight}}rpx" scroll-y="true">
+  <view wx:if="{{!openAttr}}">
+    <swiper class="goodsimgs" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+      <swiper-item wx:for="{{gallery}}" wx:key="{{item.pkFileId}}">
+        <image src="{{item.fileUrl}}" background-size="cover"></image>
+      </swiper-item>
+    </swiper>
+    <!-- <view class="service-policy">
+      <view class="item">3包服务</view>
+      <view class="item">24小时快速发货</view>
+      <view class="item">满199元免邮费</view>
+    </view> -->
+    <view class="goods-info">
+      <view class="c">
+        <text class="name">{{goods.goodsName}}</text>
+        <text class="desc">{{goods.goodsBrief}}</text>
+        <text class="price">￥{{goods.price}}</text>
+        <view class="brand" wx:if="{{brand.name}}">
+          <navigator url="../brandDetail/brandDetail?id={{brand.brandId}}">
+            <text>{{brand.name}}</text>
+          </navigator>
+        </view>
+      </view>
+    </view>
+    <view class="section-nav section-attr" bindtap="switchAttrPop">
+      <view class="t" wx:if="{{selectSpecOption.length == 0}}">请选择规格数量</view>
+      <view class="t" wx:if="{{selectSpecOption.length > 0}}"> 已选      {{selectSpecOption}}</view>
+      <image class="i" src="../images/address_right.png" background-size="cover"></image>
+    </view>
+    <!--<view class="section-nav section-act">
+      <view class="t">
+        <view class="label">1个促销:</view>
+        <view class="tag">万圣趴</view>
+        <view class="text">全场满499，额外送糖果</view>
+      </view>
+      <image class="i" src="../../static/images/address_right.png" background-size="cover"></image>
+    </view>-->
+    <view class="comments" wx:if="{{comment.count > 0}}">
+      <view class="h">
+        <navigator url="../comment/comment?valueId={{goods.id}}&typeId=0">
+          <text class="t">评价({{comment.count > 999 ? '999+' : comment.count}})</text>
+          <text class="i">查看全部</text>
+        </navigator>
+      </view>
+      <view class="b">
+        <view class="item">
+          <view class="info">
+            <view class="user">
+              <image src="{{comment.data.avatar}}"></image>
+              <text>{{comment.data.nickname}}</text>
+            </view>
+            <view class="time">{{comment.data.add_time}}</view>
+          </view>
+          <view class="content">
+            {{comment.data.content}}
+          </view>
+          <view class="imgs" wx:if="{{comment.data.pic_list.length > 0}}">
+            <image class="img" wx:for="{{comment.data.pic_list}}" wx:key="{{item.id}}" src="{{item.pic_url}}"></image>
+          </view>
+          <!-- <view class="spec">白色 2件</view> -->
+        </view>
+      </view>
+    </view>
+    <view class="goods-attr">
+      <view class="t">商品参数</view>
+      <view class="l">
+        <view class="item" wx:for="{{attribute}}" wx:key="{{item.name}}">
+          <text class="left">{{item.name}}</text>
+          <text class="right">{{item.value}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="detail">
+      <import src="../../lib/wxParse/wxParse.wxml" />
+      <template is="wxParse" data="{{wxParseData:goodsDetail.nodes}}" />
+    </view>
+
+
+    <view class="common-problem">
+      <view class="h">
+        <view class="line"></view>
+        <text class="title">常见问题</text>
+      </view>
+      <view class="b">
+        <view class="item" wx:for="{{issueList}}" wx:key="{{item.id}}">
+          <view class="question-box">
+            <text class="spot"></text>
+            <text class="question">{{item.question}}</text>
+          </view>
+          <view class="answer">
+            {{item.answer}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="related-goods" wx:if="{{relatedGoods.length > 0}}">
+      <view class="h">
+        <view class="line"></view>
+        <text class="title">大家都在看</text>
+      </view>
+      <view class="b">
+        <view class="item" wx:for="{{relatedGoods}}" wx:key="{{item.id}}">
+          <navigator url="/pages/goods/goods?id={{item.id}}">
+            <image class="img" src="{{item.list_pic_url}}" background-size="cover"></image>
+            <text class="name">{{item.name}}</text>
+            <text class="price">￥{{item.retail_price}}</text>
+          </navigator>
+        </view>
+      </view>
+    </view>
+
+  </view>
+
+  <view class="show-popup" wx:if="{{showAttr}}">
+    <view class="popup-mask" bindtap="closePopupTap"></view>
+    <view class="popup-contents">
+      <view class="pop-goods-info">
+        <view class="pop-img-box">
+          <image src="{{goods.fileUrl}}" class="goods-thumbnail" />
+        </view>
+        <view class="pop-goods-des">
+          <view class="pop-goods-price">¥ {{skuPrice}}</view>
+          <view class="pop-goods-title">已选 {{selectSpecOption}}</view>
+        </view>
+        <view class="pop-goods-close" bindtap="closePopupTap"></view>
+      </view>
+      <view class="size-label-box">
+        <block wx:for="{{specsList}}" wx:for-item="specs" wx:for-index="idx" wx:key="id">
+          <view class="label">{{specs.specName}}</view>
+          <view class="label-item-box">
+            <view class="label-item {{item.active ? 'active' : '' }}" wx:for="{{specs.specOptionList}}" wx:key="id" bindtap="clickSpecValue" data-propertyindex="{{idx}}" data-propertyid="{{specs.specId}}" data-propertyname="{{specs.specName}}" data-propertychildindex="{{index}}"
+              data-propertychildid="{{item.id}}" data-propertychildname="{{item.name}}">
+              {{item.name}}
+            </view>
+          </view>
+        </block>
+      </view>
+      <view class="buy-num-box">
+        <view class="num-label">购买数量</view>
+        <view class="num-box">
+          <view class="num-jian {{buyNumber == buyNumMin ? 'hui': ''}}" bindtap="numJianTap">-</view>
+          <view class="num-input">
+            <input type="number" value="{{buyNumber}}" disabled/>
+          </view>
+          <view class="num-jia {{buyNumber== buyNumMax ? 'hui': ''}}" bindtap="numJiaTap">+</view>
+        </view>
+      </view>
+      <view class="popup-join-btn-l" bindtap="buyGoods">
+        立即购买
+      </view>
+      <view class="popup-join-btn-r" bindtap="addToCart">
+        加入购物车
+      </view>
+    </view>
+  </view>
+
+</scroll-view>
+
+<view class="{{isIphoneX?'linkCon':''}} bottom-btn" wx:if="{{ showAttr == false }}">
+  <view class="l l-collect {{ openAttr ? 'back' : ''}}" bindtap="closeAttrOrCollect">
+    <image class="icon" src="{{ collectBackImage }}"></image>
+  </view>
+  <view class="l l-cart">
+    <view class="box">
+      <text class="cart-count">{{cartNum}}</text>
+      <image bindtap="openCartPage" class="icon" src="/pages/images/ic_menu_shoping_nor.png"></image>
+
+    </view>
+  </view>
+  <view class="c" bindtap='buyGoods'>立即购买</view>
+  <view class="r" bindtap="addToCart">加入购物车</view>
+</view>

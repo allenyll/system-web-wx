@@ -14,7 +14,8 @@ Page({
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     showPhone: false,
     phone: '',
-    point: 0
+    point: 0,
+    balance: 0
   },
 
   /**
@@ -75,6 +76,11 @@ Page({
       if (undefined != customerPoint) {
         point = customerPoint.point;
       }
+      var customerBalance = res.customerBalance;
+      var balance = 0;
+      if (undefined != customerBalance) {
+        balance = customerBalance.balance;
+      }
       app.globalData.userInfo = user;
       if (null != user.phone && '' != user.phone) {
         var phoneNumber = user.phone
@@ -86,7 +92,8 @@ Page({
       that.setData({
         userInfo: app.globalData.userInfo,
         hasUserInfo: true,
-        point: customerPoint == undefined ? 0 : customerPoint.point
+        point: customerPoint == undefined ? 0 : customerPoint.point,
+        balance: customerBalance == undefined ? 0: customerBalance.balance
       })
     })
   },
@@ -151,12 +158,16 @@ Page({
   },
 
   clickCash: function() {
-    wx.navigateTo({
-      url: '/pages/my/cash/cash',
-      success: function(res) {},
-      fail: function(res) {},
-      complete: function(res) {},
-    })
+    var that = this;
+    if (that.data.hasUserInfo == false) {
+      wx.navigateTo({
+        url: '/pages/login/login?mark=/pages/my/cash/cash',
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/my/cash/cash?id=' + escape(app.globalData.userInfo.pkCustomerId),
+      })
+    }
   },
 
   clickVip: function() {

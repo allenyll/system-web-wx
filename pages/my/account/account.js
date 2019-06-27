@@ -96,7 +96,7 @@ Page({
       param.sex = that.data.index
     }
     http('/wx/updateCustomer', param , '', 'post').then(res => {
-      dialog.showToast('保存成功', 'success', 2000)
+      dialog.showToast('保存成功', 'success', '', 2000)
     })
   },
 
