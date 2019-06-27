@@ -32,7 +32,7 @@
     line-height: 66rpx
 }
 .abnor__btn:active {
-    background-color: #0387FE
+    background-color: #f5456e
 }
 .abnor__image {
     width: 514rpx;
