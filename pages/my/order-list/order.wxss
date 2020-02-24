@@ -108,10 +108,10 @@
 }
 
 .order-list .a-order {
-  width: 100%;
+  width: 94%;
   background-color: #fff;
-  margin-top: 10rpx;
-  margin-bottom: 10rpx;
+  margin:20rpx auto;
+  border-radius:20rpx;
 }
 
 .order-list .a-order .order-date {
@@ -130,7 +130,7 @@
 }
 
 .a-order  .goods-info, .goods-img-container {
-  width: 720rpx;
+  width: 675rpx;
   margin-left: 30rpx;
   border-top: 1rpx solid #f4f4f4;
   border-bottom: 1rpx solid #f4f4f4;
@@ -153,7 +153,7 @@
 }
 
 .goods-info  .goods-des {
-  width: 720rpx;
+  width: 675rpx;
   /*height: 78rpx;*/
   height: 50rpx;
   line-height: 39rpx;
@@ -183,7 +183,7 @@
 }
 
 .goods-img-container {
-  height: 180rpx;
+  height: 230rpx;
   box-sizing: border-box;
   white-space: nowrap;
 }
@@ -197,9 +197,17 @@
   display: inline-block;
 }
 
+.goods-img-container .goods-count{
+  font-size:10px;
+  color:gray;
+  text-align:right;
+  height:20px;
+  line-height:20px;
+  padding-right:20px;
+}
 .order-list .a-order .price-box {
   position: relative;
-  width: 720rpx;
+  width: 675rpx;
   height: 100rpx;
   margin-left: 30rpx;
   display: flex;
@@ -236,4 +244,31 @@
 .a-order .price-box .topay-btn {
   border: 1px solid #e64340;
   color: #e64340;
+}
+
+.btn{
+  background:#ffffff;
+  border-radius:6rpx;
+  width:164rpx;
+  height:60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  margin: 20rpx 30rpx 20rpx auto;
+  font-size:26rpx;
+  float: right;
+}
+
+.btn-white{
+    border:1rpx solid black;
+    color:black;
+}
+
+.btn-blue{
+    border:1rpx solid #0387FE;
+    color:#0387FE;
+}
+
+.btn-red{
+    border:1rpx solid #e64340;
+    color:#e64340;
 }

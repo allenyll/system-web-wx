@@ -173,7 +173,7 @@ page {
 }
 
 .header-input {
-  width: 81%;
+  width: 678rpx;
   margin-top: 15px;
   margin-left: 18px;
   float: left;

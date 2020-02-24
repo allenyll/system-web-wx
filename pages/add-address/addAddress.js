@@ -30,9 +30,9 @@ Page({
     var mobile = e.detail.value.mobile;
     var code = e.detail.value.code;
     var flag = e.detail.value.isDefault;
-    var _isDefault = 'SW1001';
+    var _isDefault = 'SW1002';
     if(flag){
-      _isDefault = 'SW1002';
+      _isDefault = 'SW1001';
     } 
 
     if (linkMan == "") {

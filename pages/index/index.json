@@ -1,1 +1,13 @@
-{}
+{
+  "navigationBarBackgroundColor": "#0387FE",
+  "enablePullDownRefresh": true,
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "wxc-icon": "../../dist/packages/@minui/wxc-icon/dist/index",
+    "wxc-elip": "../../dist/packages/@minui/wxc-elip/dist/index",
+    "wxc-loadmore": "../../dist/packages/@minui/wxc-loadmore/dist/index",
+    "wxc-price": "../../dist/packages/@minui/wxc-price/dist/index",
+    "wxc-label": "../../dist/packages/@minui/wxc-label/dist/index",
+    "wxc-popup": "../../dist/packages/@minui/wxc-popup/dist/index"
+  }
+}

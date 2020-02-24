@@ -24,7 +24,7 @@
             <view class="goods-price">¥ {{item.price}}</view>
           </view>
           <view class="arow">
-            <view class="goods-label">{{item.label}}</view>
+            <view class="goods-label">{{item.selectSpecOption}}</view>
             <view class="goods-num">x {{item.number}}</view>
           </view>
         </view>
@@ -33,8 +33,8 @@
     <view class="peisong-way">
       <view class="row-box" wx:if="{{isNeedLogistics > 0}}">
         <view class="row-label">配送方式</view>
-        <view class="right-text" wx:if="{{yunPrice > 0}}">快递</view>
-        <view class="right-text" wx:if="{{yunPrice == 0}}">包邮</view>
+        <view class="right-text" wx:if="{{logisticsFee > 0}}">快递</view>
+        <view class="right-text" wx:if="{{logisticsFee == 0}}">包邮</view>
       </view>
       <view class="row-box">
         <view class="row-label">备注</view>
@@ -43,7 +43,20 @@
         </view>
       </view>
     </view>
-    <view class="peisong-way" hidden="{{hasNoCoupons}}">
+
+    <view class="coupon-box" bindtap='tapCoupon'>
+        <view class="coupon-item">
+            <view class="l">
+                <text class="name">请选择优惠券</text>
+                <text class="txt">{{couponDesc}}</text>
+            </view>
+            <view class="r">
+                <image src="/pages/images/address_right.png"></image>
+            </view>
+        </view>
+    </view>
+
+    <!-- <view class="peisong-way" hidden="{{hasNoCoupons}}">
       <view class="row-box" style="border-bottom:none;">
         <view class="row-label">选择使用优惠券</view>
       </view>
@@ -51,11 +64,11 @@
         <picker-view indicator-style="height: 50rpx;" style="width: 100%; height: 150rpx;" value="0" bindchange="bindChangeCoupon">
           <picker-view-column>
             <view style="line-height: 50px">不使用优惠券</view>
-            <view wx:for="{{coupons}}" wx:key="id" style="line-height: 50px">{{item.money}}元 {{item.name}}</view>
+            <view wx:for="{{coupons}}" wx:key="id" style="line-height: 50px">{{item.amount}}元 {{item.name}}</view>
           </picker-view-column>
         </picker-view>
       </view>
-    </view>
+    </view> -->
     <view class="goods-info">
       <view class="row-box">
         <view class="row-label">商品金额</view>
@@ -65,18 +78,35 @@
         <view class="row-label">运费</view>
         <view class="right-text">+ ¥ {{logisticsFee}}</view>
       </view>
-      <view class="row-box" wx:if="{{!hasNoCoupons}}">
+      <view class="row-box" wx:if="couponAmount > 0">
         <view class="row-label">优惠券</view>
-        <view class="right-text">- ¥ {{youhuijine}}</view>
+        <view class="right-text">- ¥ {{couponAmount}}</view>
+      </view>
+
+      <view class="row-box" style='border-top: 1rpx solid #f4f4f4;margin-top:10rpx; '>
+        <view class="row-label">实付金额:</view>
+        <view class="right-text"> ¥ {{totalAmount}}</view>
+      </view>
+
+      <view class='to-pay' style='margin-top: 80rpx;'>
+        <view>
+          <button class='wx-pay' type='primary' bindtap="wxPay">微信支付</button>
+        </view>
+      </view>
+
+      <view class='to-pay' style='margin-top: 40rpx;'>
+        <view>
+          <button class='wx-pay' bindtap="balancePay">余额支付</button>
+        </view>
       </view>
     </view>
     <!-- <view class="goods-info-no" wx:else >
     </view> -->
-    <view class="jiesuan-box">
+    <!-- <view class="jiesuan-box">
       <view class="left-price">
         <view class="total">合计：¥ {{totalAmount}}</view>
       </view>
       <button class="to-pay-btn" formType="submit">提交订单</button>
-    </view>
+    </view> -->
   </form>
 </view>

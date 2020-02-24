@@ -6,15 +6,17 @@
     </navigator>
   </view> -->
   <view class='index-header'>
-    <view class='header-input'>
-      <input class='input-box' placeholder="搜索商品、会员、条码"></input>
-      <i class="icon-search" id="q_i">
-        <image src='/pages/images/icon-search.png'></image>
-      </i>
+    <navigator url="/pages/search/search" class="input">
+      <view class='header-input'>
+        <input class='input-box' placeholder="搜索商品名称"></input>
+        <i class="icon-search" id="q_i">
+          <image src='/pages/images/icon-search.png'></image>
+        </i>
     </view>
-    <view class='scan-icon' bindtap="scanClick">
+    </navigator>
+    <!-- <view class='scan-icon' bindtap="scanClick">
       <image src='/pages/images/scan.png' class='scan-icon-img'></image>
-    </view>
+    </view> -->
   </view>
   <view class="catalog">
     <scroll-view class="nav" scroll-y="true">

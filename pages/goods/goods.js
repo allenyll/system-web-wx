@@ -179,9 +179,24 @@ Page({
     //  高度自适应
     wx.getSystemInfo({
       success: function (res) {
+        console.log(res)
+        let modelmes = res.model;
+        console.log(modelmes)
+        if (modelmes.search('iPhone X') != -1) {
+          app.globalData.isIphoneX = true
+        } else {
+
+        }
+        if (/iphone\sx/i.test(model)
+          || (/iphone/i.test(model) && /unknown/.test(model))
+          || /iphone\s11/.test(model)) {
+          app.globalData.isIphoneX = true;
+        } else {
+          app.globalData.isIphoneX = false;
+        }
         var clientHeight = res.windowHeight,
-          clientWidth = res.windowWidth,
-          rpxR = 750 / clientWidth;
+        clientWidth = res.windowWidth,
+        rpxR = 750 / clientWidth;
         var calc = clientHeight * rpxR - 100;
         console.log(calc)
         that.setData({
@@ -399,6 +414,10 @@ Page({
     shopCarMap.pic = this.data.goods.fileUrl;
     shopCarMap.label = this.data.goods.goodsBrief;
     shopCarMap.name = this.data.goods.goodsName;
+    shopCarMap.brandName = this.data.goods.brand.brandName;
+    shopCarMap.fkCategoryId = this.data.goods.fkCategoryId;
+    shopCarMap.giftGrowth = this.data.goods.giftGrowth;
+    shopCarMap.goodsIntegral = this.data.goods.goodsIntegral;
     // shopCarMap.label=this.data.goodsDetail.basicInfo.id; 规格尺寸 
     shopCarMap.selectSpecOption = this.data.selectSpecOption;
     shopCarMap.specValue = this.data.specValue;
@@ -410,6 +429,8 @@ Page({
     shopCarMap.skuId = this.data.sku.pkSkuId;
     shopCarMap.skuPic = this.data.sku.picUrl;
     shopCarMap.skuStock = this.data.sku.skuStock;
+    shopCarMap.skuCode = this.data.sku.skuCode;
+    
     //shopCarMap.logisticsType = this.data.goodsDetail.basicInfo.logisticsId;
     shopCarMap.logistics = true;
     //shopCarMap.weight = this.data.goodsDetail.basicInfo.weight;
@@ -450,6 +471,10 @@ Page({
     shopCarMap.pic = this.data.goods.fileUrl;
     shopCarMap.label = this.data.goods.goodsBrief;
     shopCarMap.name = this.data.goods.goodsName;
+    shopCarMap.brandName = this.data.goods.brand.brandName;
+    shopCarMap.fkCategoryId = this.data.goods.fkCategoryId;
+    shopCarMap.giftGrowth = this.data.goods.giftGrowth;
+    shopCarMap.goodsIntegral = this.data.goods.goodsIntegral;
     // shopCarMap.label=this.data.goodsDetail.basicInfo.id; 规格尺寸 
     shopCarMap.selectSpecOption = this.data.selectSpecOption;
     shopCarMap.specValue = this.data.specValue;
@@ -461,6 +486,8 @@ Page({
     shopCarMap.skuId = this.data.sku.pkSkuId;
     shopCarMap.skuPic = this.data.sku.picUrl;
     shopCarMap.skuStock = this.data.sku.skuStock;
+    shopCarMap.skuCode = this.data.sku.skuCode;
+
     // shopCarMap.logisticsType = this.data.goodsDetail.basicInfo.logisticsId;
     shopCarMap.logistics = true;
     // shopCarMap.weight = this.data.goodsDetail.basicInfo.weight;

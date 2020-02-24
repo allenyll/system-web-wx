@@ -3,8 +3,8 @@
   <view class="tab-bar">
     <view wx:for="{{tabs}}" wx:key="unique" data-index="{{index}}" bindtap="handlerTabTap" class="tab {{activeTab==index?'active':''}}" style="width: {{stv.windowWidth/tabs.length}}px">
       {{item}}
-      <wxc-badge wx:if='{{orderList[index].orderList.length>0}}' class="message__badge {{activeTab==index?'active':''}}">{{orderList[index].orderList.length}}</wxc-badge>
-      <view class="{{tabClass[index]}}"></view>
+      <wxc-badge wx:if="{{orderList[index].orderList.length>0 && item != '所有订单'}}" class="message__badge {{activeTab==index?'active':''}}">{{orderList[index].orderList.length}}</wxc-badge>
+      <!-- <view class="{{tabClass[index]}}"></view> -->
       <!--{{orderList[index].orderList.length}}-->
     </view>
     <view style="width: {{stv.lineWidth}}px; left: {{stv.offset/tabs.length}}px" class="under-line {{!stv.tStart? 'withAnimate': ''}}"></view>
@@ -34,40 +34,62 @@
           <swiper-item style="overflow: visible;border-radius: 50%;" class="one-scene">
             <scroll-view style="height:100%" scroll-y>
               <view wx:if="{{item.isnull}}" class="no-order">
-                <wxc-abnor type="ORDER" title='您还没有相关订单~' button="去逛逛" bind:abnortap="toIndexPage"></wxc-abnor>
+                <wxc-abnor type="ORDER" title='您还没有相关订单~'></wxc-abnor>
               </view>
               <view wx:else class="order-list">
                 <view class="a-order" wx:for-items="{{item.orderList}}" wx:key="{{index}}">
                   <view class="order-date">
-                    <view class="date-box">下单时间：{{item.dateAdd}}</view>
-                    <view class="status {{(item.status==-1 || item.status==4) ? '':'red'}}">{{item.statusStr}}</view>
+                    <view class="date-box">下单时间：{{item.orderTime}}</view>
+                    <view wx:if="{{item.orderStatus == 'SW0701'}}" class="status red">待付款</view>
+                    <!-- <view wx:elif="{{item.orderStatus == 'SW0702'}}" class="status red">待发货</view> -->
+                    <view wx:elif="{{item.orderStatus == 'SW0702'}}" class="status red">待发货</view>
+                    <view wx:elif="{{ item.orderStatus == 'SW0703'}}" class="status red">待收货</view>
+                    <view wx:elif="{{item.orderStatus == 'SW0704'}}" class="status red">待评价</view>
+                    <view wx:elif="{{item.orderStatus == 'SW0705' || item.orderStatus == 'SW0706'}}" class="status">已完成</view>
+                    <view wx:elif="{{item.orderStatus == 'SW0707'}}" class="status">已取消</view>
+                    <view wx:elif="{{item.orderStatus == 'SW0708'}}" class="status">已关闭</view>
+                    <view wx:else="{{item.orderStatus == 'SW0709'}}" class="status">已失效</view>
                   </view>
-                  <view class="goods-info">
+                  <!-- <view class="goods-info">
                     <view class="goods-des">
                       <view class='order-info'>
-                        <view>订单号:{{item.orderNumber}} </view>
-                        <view class='order-advance' bindtap="orderDetail" data-id="{{item.id}}" wx:if="{{item.status == 0 }}">订单详情</view>
-                        <view class='order-advance' bindtap="orderDetail" data-id="{{item.id}}" wx:elif="{{item.status == 1}}">物流信息</view>
-                        <view class='order-advance' bindtap="orderDetail" data-id="{{item.id}}" wx:elif="{{item.status == 2}}">确认收货</view>
-                        <view class='order-advance' bindtap="orderDetail" data-id="{{item.id}}" wx:elif="{{item.status == 3}}">评价订单</view>
-                        <view class='order-advance' bindtap="orderDetail" data-id="{{item.id}}" wx:else="{{item.status == 4}}">查看订单</view>
+                        <view>订单号:{{item.orderNo}}</view>
+                        <view class='order-advance' bindtap="orderDetail" data-id="{{item.id}}" wx:if="{{item.orderStatus == 'SW0701' }}">订单详情</view>
+                        <view class='order-advance' bindtap="orderDetail" data-id="{{item.id}}" wx:elif="{{item.orderStatus == 'SW0702'}}">物流信息</view>
+                        <view class='order-advance' bindtap="orderDetail" data-id="{{item.id}}" wx:elif="{{item.orderStatus == 'SW0703'}}">确认收货</view>
+                        <view class='order-advance' bindtap="orderDetail" data-id="{{item.id}}" wx:elif="{{item.orderStatus == 'SW0704'}}">评价订单</view>
+                        <view class='order-advance' bindtap="orderDetail" data-id="{{item.id}}" wx:else="{{item.orderStatus == 'SW0705'}}">查看订单</view>
                       </view>
-                      <view style='padding-top:15rpx;' wx:if="{{item.remark && item.remark != ''}}">备注： {{item.remark}}</view>
+                      <view style='padding-top:15rpx;' wx:if="{{item.orderRemark && item.orderRemark != ''}}">备注： {{item.orderRemark}}</view>
                     </view>
-                  </view>
-                  <view>
+                  </view> -->
+                  <view bindtap="clickOrderDetail" data-id="{{item.pkOrderId}}">
                     <scroll-view class="goods-img-container" scroll-x="true">
-                      <view class="img-box" wx:for-items="{{goodsMap[item.id]}}" wx:key="{{index}}">
-                        <image src="{{item.pic}}" class="goods-img"></image>
+                      <view class="img-box" wx:for-items="{{item.orderDetails}}" wx:key="{{index}}" wx:for-item="goodsItem">
+                        <image src="{{goodsItem.pic}}" class="goods-img"></image>
                       </view>
+                      <view class="goods-count">共{{item.goodsCount}}件商品</view>
                     </scroll-view>
                   </view>
                   <view class="price-box">
-                    <view class="total-price" wx:if="{{item.score <= 0}}">合计：¥ {{item.amountReal}}</view>
-                    <view class="total-price" wx:if="{{item.score > 0}}">合计：¥ {{item.amountReal}} + {{item.score}} 积分</view>
-                    <view style='width:250rpx;display: flex; flex-direction:row; justify-content: space-between;'>
-                      <button class="zan-btn zan-btn--warn zan-btn--mini zan-btn--plain" hidden="{{item.status==0? fslse : true}}" bindtap="cancelOrderTap" data-id="{{item.id}}">取消订单</button>
-                      <button class="zan-btn zan-btn--primary zan-btn--mini zan-btn--plain" hidden="{{item.status==0? fslse : true}}" bindtap="toPayTap" data-id="{{item.id}}" data-money="{{item.amountReal}}"  data-score="{{item.score}}">马上付款</button>
+                    <view class="total-price">合计：¥ {{item.totalAmount}}</view>
+                    <!-- <view class="total-price" wx:if="{{item.integration > 0}}">合计：¥ {{item.totalAmount}} + {{item.integration}} 积分</view> -->
+                    <view style='display: flex; flex-direction:row; justify-content: space-between;'>
+                      <view hidden="{{item.orderStatus == 'SW0701'? fslse : true}}" style="float:right ;margin-left:10rpx;">
+                      <van-button type="default" size="small" bindtap="cancelOrderTap" data-id="{{item.pkOrderId}}" >取消订单</van-button>
+                      </view>
+                      <view hidden="{{item.orderStatus == 'SW0701'? fslse : true}}" style="float:right ;margin-left:10rpx;">
+                      <van-button type="warning" size="small" bindtap="toPayTap" data-id="{{item.pkOrderId}}" data-money="{{item.totalAmount}}"  data-score="{{item.integration}}">立即支付</van-button>
+                      </view>
+                      <view hidden="{{item.orderStatus == 'SW0703'? fslse : true}}" style="float:right ;margin-left:10rpx;">
+                      <van-button type="primary" size="small" bindtap="receiveOrderTap" data-id="{{item.pkOrderId}}" >确认收货</van-button>
+                      </view>
+                      <view  hidden="{{item.orderStatus == 'SW0704'? fslse : true}}" style="float:right ;margin-left:10rpx;">
+                      <van-button type="info" size="small"bindtap="appraiseOrderTap" data-id="{{item.pkOrderId}}" >立即评价</van-button>
+                      </view>
+                      <view hidden="{{item.orderStatus == 'SW0707'? fslse : true}}" style="float:right ;margin-left:10rpx;">
+                      <van-button type="danger" size="small" bindtap="deleteTap" data-id="{{item.pkOrderId}}" >删除订单</van-button>
+                      </view>
                     </view>
                     <!--<view class="btn cancel-btn" hidden="{{item.status==0? fslse : true}}" bindtap="cancelOrderTap" data-id="{{item.id}}">取消订单</view>
                     <view class="btn topay-btn" hidden="{{item.status==0? fslse : true}}" bindtap="toPayTap" data-id="{{item.id}}" data-money="{{item.amountReal}}">马上付款</view>-->

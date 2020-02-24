@@ -8,6 +8,8 @@
     "pages/my/cash/balancedetail/balancedetail",
     "pages/my/recharge/charge",
     "pages/my/vip/vip",
+    "pages/my/coupon/coupon",
+    "pages/selCoupon/selCoupon",
     "pages/index/index",
     "pages/class/class",
     "pages/logs/logs",
@@ -16,8 +18,11 @@
     "pages/goods/goods",
     "pages/cart/cart",
     "pages/order-pay/orderPay",
+    "pages/order-details/orderDetails",
     "pages/add-address/addAddress",
-    "pages/address/address"
+    "pages/address/address",
+    "pages/pay/pay",
+    "pages/comment/comment"
   ],
   "window": {
     "backgroundTextStyle": "light",

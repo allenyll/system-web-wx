@@ -1,9 +1,10 @@
 /* pages/my/my.wxss */
 page{
   min-height: 100%;
+  background-color: #f4f4f4;
 }
 
-.my-container{
+.container{
   min-height: 100%;
   background-color: #f4f4f4;
 }

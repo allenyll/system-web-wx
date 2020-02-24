@@ -1,0 +1,9 @@
+{
+    "navigationBarTitleText": "订单详情",
+    "navigationBarBackgroundColor": "#0387FE",
+    "navigationBarTextStyle": "white",
+    "usingComponents": {
+      "wxc-icon": "../../dist/packages/@minui/wxc-icon/dist/index",
+      "van-steps": "../../dist/packages/@vant/steps/index"
+    }
+}

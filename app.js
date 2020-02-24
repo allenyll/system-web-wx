@@ -1,3 +1,4 @@
+import Utils from 'utils/util.js';   // 工具函数
 App({
   /**
    * 当小程序初始化完成时，会触发 onLaunch（全局只触发一次）
@@ -104,25 +105,19 @@ App({
    */
   globalData: {
     userInfo:null,
-    openid: 0,
+    openid: 0,  
     token:'',
-    baseUrl: 'https://localhost', //'https://www.allenyll.com',
+    baseUrl: 'https://localhost',
     bearer: 'Bearer ',
     logType: ',JWT_WX',
-    page: 1, //初始加载商品时的页面号
-    pageSize: 10000, //初始加载时的商品数，设置为10000保证小商户能加载完全部商品
-    categories: [],
-    goods: [],
-    hotGoods: ['桔', '火龙果', '香蕉', '酸奶', '甘蔗'], //自定义热门搜索商品
-    goodsName: [],
-    goodsList: [
-      {
-        name: '热卖',
-        goods:[]
-      }
-    ],
     onLoadStatus: true,
-    activeCategoryId: 'd9c0b09c89d54e7aa8cc7165f6994e6f',
+    page: 1,
+    limit: 10,
+    userCoupon: 'NO_USE_COUPON',//默认不适用优惠券
+    courseCouponCode: {},//购买课程的时候优惠券信息
     isIphoneX: false
-  }
+  },
+
+  // 工具函数
+  utils: Utils
 })

@@ -1,114 +1,87 @@
-<!--index.wxml-->
-<view class="index-container">
-  <view class='index-header'>
-    <view class='header-input'>
-      <input class='input-box' placeholder="搜索商品、会员、条码"></input>
-      <i class="icon-search" id="q_i">
-        <image src='/pages/images/icon-search.png'></image>
-      </i>
-    </view>
-    <view class='scan-icon' bindtap="scanClick">
-      <image src='/pages/images/scan.png' class='scan-icon-img'></image>
-    </view>
-  </view>
-  <view class="recommend">
-    <view class="swiper-container">
-      <swiper autoplay="auto" interval="5000" duration="500" current="{{swiperCurrent}}" bindchange="swiperChange" class="swiper">
-        <block wx:for="{{slider}}" wx:key="unique">
-          <swiper-item data-id="{{item.id}}" data-url="{{item.linkUrl}}">
-            <image src="{{item.picUrl}}" class="img"></image>
-          </swiper-item>
-        </block>
-      </swiper>
-      <view class="dots">
-        <block wx:for="{{slider}}" wx:key="unique">
-          <view class="dot{{index == swiperCurrent ? ' active' : ''}}" bindtap="chuangEvent" id="{{index}}">{{index+1}}</view>
-        </block>
-      </view>
-    </view>
+<view class="container">
+  <view wx:if="{{notices}}" class="notice" style='background: -webkit-linear-gradient(top, rgba(3,135,254, 1), rgba(3,135,254, 0.7));'>
+
+    <wxc-icon size='40' type="{{'notice'}}" style='margin-right:10rpx;'> </wxc-icon>
+    <wxc-elip style='width: 150rpx; color:red;text-align: center;'>IAM快报</wxc-elip>
+    <wxc-icon size='40' type="{{'minus'}}" style='transform:rotate(90deg); margin-right:10rpx;'> </wxc-icon>
+
+    <swiper wx:if="{{notices}}" class="notice_swiper" vertical="true" autoplay="true" circular="true" interval="3000">
+      <navigator wx:for-items="{{notices}}" wx:key="id" url="/pages/notice/notice?id={{item.pkMessageId}}" open-type="navigate">
+        <swiper-item>
+          <wxc-elip class="notice_item">{{item.messageName}}</wxc-elip>
+        </swiper-item>
+      </navigator>
+    </swiper>
+
+    <wxc-icon size="40" type="{{'arrow-right'}}"></wxc-icon>
   </view>
 
-
-  <view class='index-content'>
-    <view class='content-ul'>
-      <view class='content-li'>
-        <view class='li-img'>
-          <image src='/pages/images/goods.png' class=''></image>
-        </view>
-        <view class='li-text'>
-          <text>商品管理</text>
-        </view>
-      </view>
-      <view class='content-li'>
-        <view class='li-img'>
-          <image src='/pages/images/sale-order.png' class=''></image>
-        </view>
-        <view class='li-text'>
-          <text>销售单</text>
-        </view>
-      </view>
-      <view class='content-li li-right'>
-        <view class='li-img'>
-          <image src='/pages/images/order.png' class=''></image>
-        </view>
-        <view class='li-text'>
-          <text>采购单</text>
-        </view>
-      </view>
+  <!-- <swiper class="banner" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+    <swiper-item wx:for="{{banner}}" wx:key="{{item.pkAdId}}">
+      <navigator url="{{item.link}}">
+        <image src="{{item.imageUrl}}" background-size="cover"></image>
+      </navigator>
+    </swiper-item>
+  </swiper> -->
+  <view class="swiper-container">
+    <swiper class="swiper_box" autoplay="true" interval="3000" duration="1000" current='swiperCurrent' bindchange="swiperchange">
+      <swiper-item class='swiper_item' wx:for="{{banner}}" wx:key="id">
+        <image bindtap="tapBanner" data-id="{{item.pkAdId}}" data-param="{{item.link}}" src="{{item.imageUrl}}" class="slide-image" style="-webkit-transform: scale({{ swiperCurrent == index ? 0.9 : 0.65 }}) translate({{ (swiperCurrent == index - 1 || swiperCurrent == index + 1) ? (swiperCurrent - index) * 30 : 0 }}%, 0); -webkit-transition: 0.6s;"
+          mode="aspectFill" />
+      </swiper-item>
+      <!--</block>-->
+    </swiper>
+    <view class="dots">
+      <block wx:for="{{banner}}" wx:key="unique">
+        <view class="dot{{index === swiperCurrent ? ' active' : ''}}"></view>
+      </block>
     </view>
-    <view class='content-ul'>
-      <view class='content-li'>
-        <view class='li-img'>
-          <image src='/pages/images/customer.png' class=''></image>
-        </view>
-        <view class='li-text'>
-          <text>用户管理</text>
-        </view>
-      </view>
-      <view class='content-li'>
-        <view class='li-img'>
-          <image src='/pages/images/depot.png' class=''></image>
-        </view>
-        <view class='li-text'>
-          <text>库存管理</text>
-        </view>
-      </view>
-      <view class='content-li li-right'>
-        <view class='li-img'>
-          <image src='/pages/images/print.png' class=''></image>
-        </view>
-        <view class='li-text'>
-          <text>打印管理</text>
-        </view>
-      </view>
-    </view>
-    <view class='content-ul'>
-      <view class='content-li'>
-        <view class='li-img'>
-          <image src='/pages/images/report.png' class=''></image>
-        </view>
-        <view class='li-text'>
-          <text>报表管理</text>
-        </view>
-      </view>
-      <view class='content-li'>
-        <view class='li-img'>
-          <image src='/pages/images/store.png' class=''></image>
-        </view>
-        <view class='li-text'>
-          <text>店铺信息</text>
-        </view>
-      </view>
-      <view class='content-li li-right'>
-        <view class='li-img'>
-          <image src='/pages/images/wl.png' class=''></image>
-        </view>
-        <view class='li-text'>
-          <text>物流管理</text>
-        </view>
-      </view>
-    </view>
-
   </view>
 
+  <view class="a-section a-new" style="margin-top: 120rpx;" wx:if="{{newGoods.length > 0}}">
+    <view class="h">
+      <view>
+        <navigator url="../newGoods/newGoods">
+          <text class="txt">新品首发</text>
+        </navigator>
+      </view>
+    </view>
+    <view class="b">
+      <view class="item" wx:for="{{newGoods}}" wx:for-index="index" wx:for-item="item" wx:key="{{item.pkGoodsId}}">
+        <navigator url="../goods/goods?id={{item.pkGoodsId}}">
+          <image class="img" src="{{item.fileUrl}}" background-size="cover"></image>
+          <text class="name">{{item.goodsName}}</text>
+          <text class="price">￥{{item.price}}</text>
+        </navigator>
+      </view>
+    </view>
+  </view>
+
+  <view class="a-section a-popular" wx:if="{{hotGoods.length > 0}}">
+    <view class="h">
+      <view>
+        <navigator url="../hotGoods/hotGoods">
+          <text class="txt">人气推荐</text>
+        </navigator>
+      </view>
+    </view>
+    <view class="b">
+      <view class="item" wx:for="{{hotGoods}}" wx:for-index="index" wx:for-item="item" wx:key="{{item.pkGoodsId}}">
+        <navigator url="/pages/goods/goods?id={{item.pkGoodsId}}">
+          <image class="img" src="{{item.fileUrl}}" background-size="cover"></image>
+          <view class="right">
+            <view class="text">
+              <text class="name">{{item.goodsName}}</text>
+              <text class="desc">{{item.goodsBrief}}</text>
+              <text class="price">￥{{item.price}}</text>
+            </view>
+          </view>
+        </navigator>
+      </view>
+    </view>
+  </view>
+
+  <view class="index-bottom">
+    <view></view>
+  </view>
 </view>

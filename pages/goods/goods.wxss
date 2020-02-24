@@ -904,3 +904,15 @@ view{
 .buy-num-box .num-box .hui {
   background-color: #f5f5f9;
 }
+
+.linkCon {
+  bottom:68rpx!important;
+}
+.linkCon::after {
+  content: ' ';
+  position: fixed;
+  bottom: 0!important;
+  height: 68rpx!important;
+  width: 100%;
+  background: #fff;
+}

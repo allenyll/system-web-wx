@@ -1,8 +1,11 @@
-// var wxpay = require('../../../utils/pay.js')
+const http = require('../../../utils/http.js')  // 引入
+const dialog = require('../../../utils/dialog.js')  // 引入
+var wxpay = require('../../../utils/pay.js')
 var app = getApp()
 Page({
   data: {
-    tabs: ["待付款", "待发货", "待收货", "待评价", "已完成"],
+    tabs: ["所有订单", "待付款", "待发货", "待收货", "待评价"],
+    tabDicts: ["SW0700", "SW0701", "SW0702", "SW0703", "SW0704"],
     tabClass: ["", "", "", "", ""],
     stv: {
       windowWidth: 0,
@@ -12,6 +15,8 @@ Page({
     },
     activeTab: 0,
     loadingStatus: false,
+    customerId: '',
+    totalOrderList: []
   },
   onLoad: function (options) {
     console.log(unescape(options.id))
@@ -21,7 +26,10 @@ Page({
       this.windowWidth = res.windowWidth;
       this.data.stv.lineWidth = this.windowWidth / this.data.tabs.length;
       this.data.stv.windowWidth = res.windowWidth;
-      this.setData({ stv: this.data.stv })
+      this.setData({ 
+        stv: this.data.stv, 
+        customerId: options.id
+      })
       this.tabsCount = tabs.length;
     } catch (e) {
     }
@@ -36,106 +44,101 @@ Page({
   },
   getOrderStatistics: function () {
     var that = this;
-    wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/statistics',
-      data: { 
-        token: wx.getStorageSync('token') 
-      },
-      success: (res) => {
-        wx.hideLoading();
-        if (res.data.code == 0) {
-          var tabClass = that.data.tabClass;
-          if (res.data.data.count_id_no_pay > 0) {
-            tabClass[0] = "red-dot"
-          } else {
-            tabClass[0] = ""
-          }
-          if (res.data.data.count_id_no_transfer > 0) {
-            tabClass[1] = "red-dot"
-          } else {
-            tabClass[1] = ""
-          }
-          if (res.data.data.count_id_no_confirm > 0) {
-            tabClass[2] = "red-dot"
-          } else {
-            tabClass[2] = ""
-          }
-          if (res.data.data.count_id_no_reputation > 0) {
-            tabClass[3] = "red-dot"
-          } else {
-            tabClass[3] = ""
-          }
-          if (res.data.data.count_id_success > 0) {
-            //tabClass[4] = "red-dot"
-          } else {
-            //tabClass[4] = ""
-          }
-
-          console.log(tabClass)
-          that.setData({
-            tabClass: tabClass,
-          });
+    var param = {
+      customerId: that.data.customerId
+    }
+    http('/system-web/order/getOrderNum', param, '', 'post').then(res => {
+      if (res.code == '100000') {
+        console.log(res)
+        var tabClass = that.data.tabClass;
+        if (res.unPayNum> 0) {
+          tabClass[0] = "red-dot"
+        } else {
+          tabClass[0] = ""
         }
+        if (res.unReceiveNum > 0) {
+          tabClass[1] = "red-dot"
+        } else {
+          tabClass[1] = ""
+        }
+        if (res.receiveNum > 0) {
+          tabClass[2] = "red-dot"
+        } else {
+          tabClass[2] = ""
+        }
+        if (res.appraisesNum > 0) {
+          tabClass[3] = "red-dot"
+        } else {
+          tabClass[3] = ""
+        }
+        if (res.finishNum > 0) {
+          //tabClass[4] = "red-dot"
+        } else {
+          //tabClass[4] = ""
+        }
+
+        console.log(tabClass)
+        that.setData({
+          tabClass: tabClass,
+        });
+      }else{
+        dialog.dialog('错误', '获取订单数量异常', false, '确定');
       }
-    })
+    });
   },
   getOrderList: function () {
     var that = this;
-    var postData = {
-      token: wx.getStorageSync('token'),
-      pageSize: app.globalData.pageSize,
-      page: app.globalData.page
+    var param = {
+      limit: app.globalData.limit,
+      page: app.globalData.page,
+      customerId: that.data.customerId
     };
     console.log('getting orderList')
-    wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/list',
-      data: postData,
-      success: (res) => {
-        if (res.data.code === 0) {
-          console.log('orderList',res.data.data.orderList)
-          that.setData({
-            totalOrderList: res.data.data.orderList,
-            logisticsMap: res.data.data.logisticsMap,
-            goodsMap: res.data.data.goodsMap
-          });
-          //订单分类
-          var orderList = [];
-          for (let i = 0; i < that.data.tabs.length; i++) {
-            var tempList = [];
-            for (let j = 0; j < res.data.data.orderList.length; j++) {
-              if (res.data.data.orderList[j].status == i) {
-                tempList.push(res.data.data.orderList[j])
-                //orderList[i].push(res.data.data.orderList[j])
-              }
+    http('/system-web/order/getOrderList', param, '', 'post').then(res => {
+      if (res.code == '100000') {
+        console.log(res)
+        that.setData({
+          totalOrderList: res.list,
+          logisticsMap: {},
+          goodsMap:{}
+        });
+        //订单分类
+        var orderList = [];
+        for (let i = 0; i < that.data.tabs.length; i++) {
+          var tempList = [];
+          for (let j = 0; j < res.list.length; j++) {
+            if (res.list[j].orderStatus == that.data.tabDicts[i]) {
+              tempList.push(res.list[j])
             }
-            console.log(tempList)
-            orderList.push({ 'status': i, 'isnull': tempList.length === 0, 'orderList': tempList })
+            if(i == 0){
+              tempList.push(res.list[j])
+            }
           }
-          console.log(orderList)
-          this.setData({
-            orderList: orderList
-          });
-        } else {
-          console.log('orderList not exist')
-          that.setData({
-            orderList: 'null',
-            logisticsMap: {},
-            goodsMap: {}
-          });
+          console.log(tempList)
+          orderList.push({ 'status': i, 'isnull': tempList.length === 0, 'orderList': tempList })
         }
+        console.log(orderList)
         this.setData({
-          loadingStatus: false
-        })
-      },
-      fail: (res) =>{
-        console.log('获取orderList错误',res.data)
+          orderList: orderList
+        });
+      } else {
+        console.log('orderList not exist')
+        that.setData({
+          orderList: 'null',
+          logisticsMap: {},
+          goodsMap: {}
+        });
+        dialog.dialog('错误', '获取订单异常', false, '确定');
       }
-    })
+      this.setData({
+        loadingStatus: false
+      })
+    });
   },
-  orderDetail: function (e) {
+  clickOrderDetail: function (e) {
     var orderId = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: "/pages/order-details/index?id=" + orderId
+      url: "/pages/order-details/orderDetails?id=" + orderId
     })
   },
   cancelOrderTap: function (e) {
@@ -147,17 +150,12 @@ Page({
       success: function (res) {
         if (res.confirm) {
           wx.showLoading();
-          wx.request({
-            url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/close',
-            data: {
-              token: wx.getStorageSync('token'),
-              orderId: orderId
-            },
-            success: (res) => {
-              wx.hideLoading();
-              if (res.data.code == 0) {
-                that.onShow();
-              }
+          http('/system-web/order/cancelOrder/'+orderId, '', '', 'post').then(res => {
+            wx.hideLoading();
+            if(res.code == '100000'){
+              that.onShow();
+            }else{
+              dialog.dialog('错误', '取消订单异常，请联系管理员!', false, '确定');
             }
           })
         }
@@ -168,52 +166,101 @@ Page({
     var that = this;
     var orderId = e.currentTarget.dataset.id;
     var money = e.currentTarget.dataset.money;
-    var needScore = e.currentTarget.dataset.score;
+    var integration = e.currentTarget.dataset.integration;
+    wxpay.wxpay(app, money, orderId, '/pages/my/order-list/order', "order");
     //wxpay.wxpay(app, money, orderId, "/pages/order-list/index");
-    wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/user/amount',
-      data: {
-        token: wx.getStorageSync('token')
-      },
+    // wx.request({
+    //   url: 'https://api.it120.cc/' + app.globalData.subDomain + '/user/amount',
+    //   data: {
+    //     token: wx.getStorageSync('token')
+    //   },
+    //   success: function (res) {
+    //     if (res.data.code == 0) {
+    //       // res.data.data.balance
+    //       money = money - res.data.data.balance;
+    //       if (res.data.data.score < needScore) {
+    //         wx.showModal({
+    //           title: '错误',
+    //           content: '您的积分不足，无法支付',
+    //           showCancel: false
+    //         })
+    //         return;
+    //       }
+    //       if (money <= 0) {
+    //         // 直接使用余额支付
+    //         wx.request({
+    //           url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/pay',
+    //           method: 'POST',
+    //           header: {
+    //             'content-type': 'application/x-www-form-urlencoded'
+    //           },
+    //           data: {
+    //             token: wx.getStorageSync('token'),
+    //             orderId: orderId
+    //           },
+    //           success: function (res2) {
+    //             that.onShow();
+    //           }
+    //         })
+    //       } else {
+    //         //wxpay.wxpay(app, money, orderId, "/pages/ucenter/order-list/index");
+    //       }
+    //     } else {
+    //       wx.showModal({
+    //         title: '错误',
+    //         content: '无法获取用户资金信息',
+    //         showCancel: false
+    //       })
+    //     }
+    //   }
+    // })
+  },
+  deleteTap(e) {
+    var that = this;
+    var orderId = e.currentTarget.dataset.id;
+    wx.showModal({
+      title: '确定要删除该订单吗？',
+      content: '',
       success: function (res) {
-        if (res.data.code == 0) {
-          // res.data.data.balance
-          money = money - res.data.data.balance;
-          if (res.data.data.score < needScore) {
-            wx.showModal({
-              title: '错误',
-              content: '您的积分不足，无法支付',
-              showCancel: false
-            })
-            return;
-          }
-          if (money <= 0) {
-            // 直接使用余额支付
-            wx.request({
-              url: 'https://api.it120.cc/' + app.globalData.subDomain + '/order/pay',
-              method: 'POST',
-              header: {
-                'content-type': 'application/x-www-form-urlencoded'
-              },
-              data: {
-                token: wx.getStorageSync('token'),
-                orderId: orderId
-              },
-              success: function (res2) {
-                that.onShow();
-              }
-            })
-          } else {
-            //wxpay.wxpay(app, money, orderId, "/pages/ucenter/order-list/index");
-          }
-        } else {
-          wx.showModal({
-            title: '错误',
-            content: '无法获取用户资金信息',
-            showCancel: false
+        if (res.confirm) {
+          wx.showLoading();
+          http('/system-web/order/deleteOrder/' + orderId, '', '', 'post').then(res => {
+            wx.hideLoading();
+            if (res.code == '100000') {
+              that.onShow();
+            } else {
+              dialog.dialog('错误', '删除订单异常，请联系管理员!', false, '确定');
+            }
           })
         }
       }
+    })
+  },
+  receiveOrderTap(e) {
+    var that = this;
+    var orderId = e.currentTarget.dataset.id;
+    wx.showModal({
+      title: '确认已收到货？',
+      content: '',
+      success: function (res) {
+        if (res.confirm) {
+          wx.showLoading();
+          http('/system-web/order/receiveOrder/' + orderId, '', '', 'post').then(res => {
+            wx.hideLoading();
+            if (res.code == '100000') {
+              that.onShow();
+            } else {
+              dialog.dialog('错误', '订单确认收货异常，请联系管理员!', false, '确定');
+            }
+          })
+        }
+      }
+    })
+  },
+  appraiseOrderTap(e){
+    var orderId = e.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: '/pages/comment/comment?orderId=' + orderId,
     })
   },
   ////////
@@ -305,7 +352,7 @@ Page({
   },
   //事件处理函数
   swiperchange: function (e) {
-    //console.log('swiperCurrent',e.detail.current)
+    console.log('swiperCurrent',e.detail.current)
     let { tabs, stv, activeTab } = this.data;
     activeTab = e.detail.current;
     this.setData({ activeTab: activeTab })

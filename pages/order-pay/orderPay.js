@@ -1,5 +1,5 @@
-//index.js
 const http = require('../../utils/http.js')  // 引入
+var wxpay = require('../../utils/pay.js')
 const dialog = require('../../utils/dialog.js')  // 引入
 //获取应用实例
 var app = getApp()
@@ -18,7 +18,13 @@ Page({
     hasNoCoupons: true,
     coupons: [],
     youhuijine: 0, //优惠券金额
-    curCoupon: null // 当前选择使用的优惠券
+    curCoupon: null, // 当前选择使用的优惠券,
+    couponDesc: '',
+    couponId: '',
+    couponAmount: 0,     // 优惠券优惠金额
+    promotionAmount: 0,  // 商品促销金额
+    discountAmount: 0,    // 商品折扣金额
+    integrationAmount: 0
   },
   onShow: function () {
     var that = this;
@@ -46,6 +52,8 @@ Page({
     });
     console.log(that.data.goodsList)
     that.initAddress();
+    that.getCoupon();
+    that.getCouponData();
     that.dealPrice();
   },
 
@@ -56,6 +64,29 @@ Page({
       isNeedLogistics: 1,
       orderType: e.orderType
     });
+    //每次重新加载界面，清空数据
+    app.globalData.userCoupon = 'NO_USE_COUPON'
+    app.globalData.courseCouponCode = {}
+  },
+
+  /**
+   * 获取优惠券
+   */
+  getCouponData: function () {
+    if (app.globalData.userCoupon == 'USE_COUPON') {
+      this.setData({
+        couponDesc: app.globalData.courseCouponCode.name,
+        couponId: app.globalData.courseCouponCode.couponId,
+        couponAmount: app.globalData.courseCouponCode.amount
+      })
+      console.log(app.globalData.courseCouponCode.amount)
+    } else if (app.globalData.userCoupon == 'NO_USE_COUPON') {
+      this.setData({
+        couponDesc: "不使用优惠券",
+        couponId: '',
+        couponAmount: 0
+      })
+    }
   },
 
   getDistrictId: function (obj, aaa) {
@@ -70,7 +101,7 @@ Page({
 
   createOrder: function (e) {
     var that = this;
-    //wx.showLoading();
+    wx.showLoading();
     var remark = ""; // 备注信息
     if (e) {
       remark = e.detail.value.remark; // 备注信息
@@ -97,10 +128,27 @@ Page({
       param.postCode = that.data.curAddressData.postCode;
       param.fkAddressId = that.data.curAddressData.pkAddressId;
       param.goodsList = that.data.goodsList;
+      const list = that.data.goodsList;
+      var giftGrowth = 0;
+      var goodsIntegral = 0;
+      if(list.length > 0){
+        for (var i = 0; i < list.length; i++){
+          giftGrowth += list[i].giftGrowth;
+          goodsIntegral += list[i].goodsIntegral;
+        }
+      }
+      param.goodsIntegral = goodsIntegral;
+      param.giftGrowth = giftGrowth;
     }
-    if (that.data.curCoupon) {
-      param.couponId = that.data.curCoupon.pkCouponId;
-    }
+    param.logisticsFee = that.data.logisticsFee;
+    param.totalAmount = that.data.totalAmount;
+    param.allGoodsPrice = that.data.allGoodsPrice;
+    param.couponId = that.data.couponId;
+    param.couponAmount = that.data.couponAmount;
+    param.discountAmount = that.data.discountAmount;
+    param.promotionAmount = that.data.promotionAmount;
+    param.integrationAmount = that.data.integrationAmount;
+    param.fkCustomerId = app.globalData.userInfo.pkCustomerId;
     if (!e) {
       param.calculate = "true";
     }
@@ -109,8 +157,22 @@ Page({
     http('/system-web/order/cacheOrder', param, null, 'post').then(res => {
       if(res.code == '100000'){
         console.log(res)
+        wx.hideLoading();
+        if ("buyNow" != that.data.orderType) {
+          // 清空购物车数据
+          wx.removeStorageSync('cartInfo');
+        }
+        console.log(res.order.pkOrderId)
+        that.data.orderId = res.order.pkOrderId;
+        // 发起支付
+        wxpay.wxpay(app, this.data.totalAmount, this.data.orderId, '/pages/my/order-list/order', "order");
+        // 跳转到支付页
+      //   wx.redirectTo({
+      //      url: "/pages/pay/pay?orderId="+res.order.pkOrderId+"&totalAmount="+that.data.totalAmount
+      //  });
       }else{
-        dialog.dialog('错误', '缓存订单失败', false, '确定');
+        wx.hideLoading();
+        dialog.dialog('错误', '订单创建失败', false, '确定');
       }
     });
 
@@ -190,7 +252,7 @@ Page({
             if(that.data.pageType == 'back'){
               mark = res.data[i].isSelect
             }
-            if(mark == 'SW1002'){
+            if(mark == 'SW1001'){
               that.setData({
                 curAddressData: res.data[i]
               });
@@ -215,7 +277,9 @@ Page({
 
   dealPrice: function() {
     var that = this;
-    var goodsList = this.data.goodsList;
+    var goodsList = that.data.goodsList;
+    var _couponAmount = that.data.couponAmount;
+    console.log(_couponAmount)
     var isNeedLogistics = 0;
     var allGoodsPrice = 0;
     var _logisticsFee = 0;
@@ -230,8 +294,28 @@ Page({
     that.setData({
       allGoodsPrice: allGoodsPrice,
       logisticsFee: _logisticsFee,
-      totalAmount: allGoodsPrice + _logisticsFee
+      totalAmount: allGoodsPrice + _logisticsFee - _couponAmount
     })
+  },
+
+  getCoupon: function() {
+    var param = {
+      customerId: app.globalData.userInfo.pkCustomerId
+    }
+    http('/system-web/coupon/getCouponList', param, null, 'post').then(res => {
+      if (res.code == '100000') {
+        console.log(res)
+        const coupons = res.list;
+        if (coupons.length > 0) {
+          this.setData({
+            hasNoCoupons: false,
+            coupons: coupons
+          });
+        }
+      } else {
+        dialog.dialog('错误', '获取优惠券失败', false, '确定');
+      }
+    });
   },
 
   processYunfei: function () {
@@ -280,29 +364,25 @@ Page({
       url: "/pages/address/address"
     })
   },
-  getMyCoupons: function () {
-    var that = this;
-    wx.request({
-      url: 'https://api.it120.cc/' + app.globalData.subDomain + '/discounts/my',
-      data: {
-        token: wx.getStorageSync('token'),
-        status: 0
-      },
-      success: function (res) {
-        if (res.data.code === 0) {
-          var coupons = res.data.data.filter(entity => {
-            return entity.moneyHreshold <= that.data.allGoodsAndYunPrice;
-          });
-          if (coupons.length > 0) {
-            that.setData({
-              hasNoCoupons: false,
-              coupons: coupons
-            });
-          }
-        }
-      }
+  /**
+  * 选择可用优惠券
+  */
+  tapCoupon: function () {
+    let that = this
+
+    wx.navigateTo({
+      url: '../selCoupon/selCoupon?buyType=' + that.data.orderType,
     })
   },
+
+  wxPay: function() {
+    this.createOrder();
+  },
+
+  balancePay: function() {
+    dialog.dialog('提示', '暂不支持余额支付', false, '确定');
+  },
+
   bindChangeCoupon: function (e) {
     const selIndex = e.detail.value[0] - 1;
     if (selIndex === -1) {

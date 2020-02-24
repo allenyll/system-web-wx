@@ -51,8 +51,8 @@
               <view class="switch-remark"><text decode="{{true}}">&emsp;&emsp;</text>每次下单会使用默认地址，实际下单根据您切换的地址判断，请确认后下单！</view>
             </view>
             <view class="switch-right">
-               <switch class='add-switch' name="isDefault" wx:if="{{addressData.isDefault == 'SW1002'}}" checked bindchange="switchChange"/>
-               <switch class='add-switch' name="isDefault" wx:if="{{addressData.isDefault == 'SW1001' || addressData.isDefault == '' || addressData.isDefault == undefined}}" bindchange="switchChange"/>
+               <switch class='add-switch' name="isDefault" wx:if="{{addressData.isDefault == 'SW1001'}}" checked bindchange="switchChange"/>
+               <switch class='add-switch' name="isDefault" wx:if="{{addressData.isDefault == 'SW1002' || addressData.isDefault == '' || addressData.isDefault == undefined}}" bindchange="switchChange"/>
             </view>
         </view>
     </view>

@@ -6,7 +6,7 @@ function wxpay(app, money, orderId, redirectUrl, type) {
   let transactionId = '';
   if (orderId != 0) {
     remark = "支付订单 ：" + orderId;
-    nextAction = { type: 0, id: orderId };
+    console.log(orderId)
   }
   wx.request({
     url: app.globalData.baseUrl + '/system-web/pay/createUnifiedOrder',
@@ -23,7 +23,8 @@ function wxpay(app, money, orderId, redirectUrl, type) {
       payName: "在线支付",
       nextAction: nextAction,
       openid: wx.getStorageSync('openid'),
-      customerId: app.globalData.userInfo.pkCustomerId
+      customerId: app.globalData.userInfo.pkCustomerId,
+      orderId: orderId
     },
     //method:'POST',
     success: function (res) {
@@ -65,23 +66,28 @@ function wxpay(app, money, orderId, redirectUrl, type) {
                     http('/system-web/customerBalance/updateBalance', param, '', 'post').then(res => {       
                       // 更新支付记录状态为成功
                       if(res.code == '100000'){
-                        const _param = {
-                          transactionId: transactionId
-                        }
-                        http('/system-web/pay/updateStatus', _param, '', 'post').then(res => {
-                          wx.redirectTo({
-                            url: redirectUrl
-                          });
-                        })
+                        wx.redirectTo({
+                          url: redirectUrl
+                        });
+                        // const _param = {
+                        //   transactionId: transactionId
+                        // }
+                        // http('/system-web/pay/updateStatus', _param, '', 'post').then(res => {
+                        //   wx.redirectTo({
+                        //     url: redirectUrl
+                        //   });
+                        // })
                       }
                     })
                   }else{
                     const _param = {
-                      transactionId: transactionId
+                      transactionId: transactionId,
+                      type: type,
+                      orderId: orderId
                     }
                     http('/system-web/pay/updateStatus', _param, '', 'post').then(res =>                     {
                       wx.redirectTo({
-                        url: redirectUrl
+                        url: redirectUrl + '?id='+ escape(app.globalData.userInfo.pkCustomerId)
                       });
                     })
                   }

@@ -46,11 +46,6 @@ Page({
           console.log("插入小程序登录用户信息成功！");
         }
       });
-      //授权成功后，跳转进入小程序首页
-      console.log(that.data.url)
-      wx.redirectTo({
-        url: that.data.url
-      })
     } else {
       //用户按了拒绝按钮
       wx.showModal({
@@ -79,6 +74,11 @@ Page({
         var user = res.data.customer;
         app.globalData.userInfo = user;
         console.log(user)
+        //授权成功后，跳转进入小程序首页
+        console.log(that.data.url)
+        wx.redirectTo({
+          url: that.data.url + '?id=' + escape(app.globalData.userInfo.pkCustomerId)
+        })
       },
       fail: function (res) {
 

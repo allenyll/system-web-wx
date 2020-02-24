@@ -130,7 +130,7 @@ Page({
 
   setAccount: function(){
     var that = this;
-    if (that.data.hasUserInfo == false) {
+    if (that.data.hasUserInfo == false || app.globalData.userInfo == null) {
       wx.navigateTo({
         url: '/pages/login/login?mark=/pages/my/account/account',
       })
@@ -146,7 +146,7 @@ Page({
    */
   clickPoint: function() {
     var that = this;
-    if (that.data.hasUserInfo == false) {
+    if (that.data.hasUserInfo == false || app.globalData.userInfo == null) {
       wx.navigateTo({
         url: '/pages/login/login?mark=/pages/my/point/point',
       })
@@ -159,7 +159,7 @@ Page({
 
   clickCash: function() {
     var that = this;
-    if (that.data.hasUserInfo == false) {
+    if (that.data.hasUserInfo == false || app.globalData.userInfo == null) {
       wx.navigateTo({
         url: '/pages/login/login?mark=/pages/my/cash/cash',
       })
@@ -184,13 +184,47 @@ Page({
    */
   clickOrder: function(){
     var that = this;
-    if(that.data.hasUserInfo == false){
+    console.log(that.data.hasUserInfo)
+    if (that.data.hasUserInfo == false || app.globalData.userInfo == null) {
       wx.navigateTo({
         url: '/pages/login/login?mark=/pages/my/order-list/order',
       })
     }else{
       wx.navigateTo({
         url: '/pages/my/order-list/order?id=' + escape(app.globalData.userInfo.pkCustomerId),
+      })
+    }
+  },
+
+  /**
+   * 地址管理点击事件
+   */
+  clickAddress: function () {
+    var that = this;
+    if (that.data.hasUserInfo == false || app.globalData.userInfo == null) {
+      wx.navigateTo({
+        url: '/pages/login/login?mark=/pages/address/address',
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/address/address?id=' + escape(app.globalData.userInfo.pkCustomerId),
+      })
+    }
+  },
+
+  /**
+   * 优惠券管理点击事件
+   */
+  clickCoupon: function () {
+    var that = this;
+    console.log(app.globalData.userInfo)
+    if (that.data.hasUserInfo == false || app.globalData.userInfo == null) {
+      wx.navigateTo({
+        url: '/pages/login/login?mark=/pages/my/coupon/coupon',
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/my/coupon/coupon?id=' + escape(app.globalData.userInfo.pkCustomerId),
       })
     }
   },
