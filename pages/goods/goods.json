@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "商品管理",
+  "navigationBarBackgroundColor": "#fff",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {
+    "van-search": "../../packages/@vant/weapp/search/index",
+    "van-tab": "../../packages/@vant/weapp/tab/index",
+    "van-tabs": "../../packages/@vant/weapp/tabs/index"
+  }
+}

@@ -1,4 +1,8 @@
 /* pages/my/my.wxss */
+page {
+  background-color: #f4f4f4;
+}
+
 .my-header {
   width: 100%;
   height: 90px;
@@ -11,8 +15,8 @@
 }
 
 .userinfo-avatar {
-  width: 70px;
-  height: 70px;
+  width: 65px;
+  height: 65px;
   border: 1px solid#00BFFF;
   border-radius:35px;
 }
@@ -20,7 +24,7 @@
 .my-info {
   float:left; 
   width:100px; 
-  padding:10px 0px 0px 17px;
+  padding: 7px 0px 0px 10px;
   color:white;
 }
 
@@ -51,6 +55,20 @@
   text-align:center;
 }
 
+.my-info-phone{
+  color: white;
+  font-size: 12px; 
+  width:88px;
+  /*height:30px;*/
+  line-height:25px;
+  background: #0387FE;
+  border:1px solid white;
+  border-radius: 8px;
+  float: left;
+  margin-top:7px;
+  padding: 0px;
+}
+
 .my-info-detail{
   float:right;
   color:white;
@@ -60,7 +78,10 @@
 }
 
 .my-ul{
-  height:50px;line-height:50px;border-bottom:1px solid #e6e6e6;
+  height:50px;
+  line-height:50px;
+  background: #fff;
+  border-bottom:1px solid #eee;
 }
 
 .icon{

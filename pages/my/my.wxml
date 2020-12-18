@@ -11,7 +11,10 @@
         <button class='my-info-login' wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo">登录</button>
         <block wx:else>
           <view class='my-name'>{{userInfo.nickName}}</view>
-          <view class='my-phone' >132****3282</view>
+          <!-- <view class="my-phone" wx:if="{{showPhone}}">{{phone}}</view>
+          <view wx:else class="wx_phone">
+            <button class="my-info-phone" bindgetphonenumber="getPhoneNumber" open-type="getPhoneNumber"><view class="iconfont icon-phone" style="display:inline;font-size:12px;"></view>绑定手机号</button>
+          </view> -->
         </block>
       </view>
       <view class='my-info-detail' >
@@ -19,9 +22,11 @@
       </view>
   </view>
   <view class='my-content'>
+    <view style='height:10px;background:#F5F5F5;'>
+    </view>
     <view class='my-ul'>
       <view class='icon'>
-        <image class='icon-image' src='/pages/images/goods.png' ></image>
+        <view class="iconfont icon-goods" style='color: #EE2C2C; font-size: 20px;'></view>
       </view>
       <view class='li-name'>
         <text>商品管理</text>
@@ -32,7 +37,7 @@
     </view>
     <view class='my-ul'>
       <view class='icon'>
-        <image class='icon-image' src='/pages/images/depot.png' ></image>
+        <view class="iconfont icon-cangku-tianchong" style='color: #CDBA96; font-size: 20px;'></view>
       </view>
       <view class='li-name'>
         <text>仓库管理</text>
@@ -43,7 +48,7 @@
     </view>
     <view class='my-ul'>
       <view class='icon'>
-        <image class='icon-image' src='/pages/images/wl.png' ></image>
+        <view class="iconfont icon-wuliu" style='color: #CD4F39; font-size: 20px;'></view>
       </view>
       <view class='li-name'>
         <text>物流管理</text>
@@ -56,7 +61,7 @@
     </view>
     <view class='my-ul'>
       <view class='icon'>
-        <image class='icon-image' src='/pages/images/customer.png' ></image>
+        <view class="iconfont icon-kehuguanli" style='color: #87CEFA; font-size: 20px;'></view>
       </view>
       <view class='li-name'>
         <text>客户管理</text>
@@ -67,7 +72,7 @@
     </view>
     <view class='my-ul'>
       <view class='icon'>
-        <image class='icon-image' src='/pages/images/gys.png' ></image>
+        <view class="iconfont icon-supplier" style='color: #FF8C00; font-size: 20px;'></view>
       </view>
       <view class='li-name'>
         <text>供应商管理</text>
@@ -78,7 +83,7 @@
     </view>
     <view class='my-ul'>
       <view class='icon'>
-        <image class='icon-image' src='/pages/images/account.png' ></image>
+        <view class="iconfont icon-zhanghu" style='color: #F08080; font-size: 20px;'></view>
       </view>
       <view class='li-name'>
         <text>账户管理</text>
@@ -91,7 +96,7 @@
     </view>
     <view class='my-ul'>
       <view class='icon'>
-        <image class='icon-image' src='/pages/images/setting.png' ></image>
+        <view class="iconfont icon-xitongshezhi" style='color: #838B8B; font-size: 20px;'></view>
       </view>
       <view class='li-name'>
         <text>系统设置</text>
@@ -102,7 +107,7 @@
     </view>
     <view class='my-ul'>
       <view class='icon'>
-        <image class='icon-image' src='/pages/images/service.png' ></image>
+        <view class="iconfont icon-kefu" style='color: #00FFFF; font-size: 20px;'></view>
       </view>
       <view class='li-name'>
         <text>我的客服</text>
@@ -113,7 +118,7 @@
     </view>
     <view class='my-ul'>
       <view class='icon'>
-        <image class='icon-image' src='/pages/images/about-us.png' ></image>
+        <view class="iconfont icon-guanyuwomen" style='color: #00CED1; font-size: 20px;'></view>
       </view>
       <view class='li-name'>
         <text>关于我们</text>
@@ -124,7 +129,7 @@
     </view>
      <view class='my-ul'>
       <view class='icon'>
-        <image class='icon-image' src='/pages/images/advice.png' ></image>
+        <view class="iconfont icon-yijianfankui" style='color: #87CEFA; font-size: 20px;'></view>
       </view>
       <view class='li-name'>
         <text>意见反馈</text>

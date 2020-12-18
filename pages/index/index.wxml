@@ -11,29 +11,27 @@
       <image src='/pages/images/scan.png' class='scan-icon-img'></image>
     </view>
   </view>
-  <view class="recommend">
-    <view class="swiper-container">
-      <swiper autoplay="auto" interval="5000" duration="500" current="{{swiperCurrent}}" bindchange="swiperChange" class="swiper">
-        <block wx:for="{{slider}}" wx:key="unique">
-          <swiper-item data-id="{{item.id}}" data-url="{{item.linkUrl}}">
-            <image src="{{item.picUrl}}" class="img"></image>
-          </swiper-item>
-        </block>
-      </swiper>
-      <view class="dots">
-        <block wx:for="{{slider}}" wx:key="unique">
-          <view class="dot{{index == swiperCurrent ? ' active' : ''}}" bindtap="chuangEvent" id="{{index}}">{{index+1}}</view>
-        </block>
-      </view>
+  <view class="swiper-container">
+    <swiper class="swiper_box" autoplay="true" interval="3000" duration="1000" current='swiperCurrent' bindchange="swiperchange">
+      <swiper-item class='swiper_item' wx:for="{{banner}}" wx:key="id">
+        <image bindtap="" data-id="{{item.id}}" data-param="{{item.link}}" src="{{item.imageUrl}}" class="slide-image" style="-webkit-transform: scale({{ swiperCurrent == index ? 0.9 : 0.65 }}) translate({{ (swiperCurrent == index - 1 || swiperCurrent == index + 1) ? (swiperCurrent - index) * 30 : 0 }}%, 0); -webkit-transition: 0.6s;"
+          mode="aspectFill" />
+      </swiper-item>
+      <!--</block>-->
+    </swiper>
+    <view class="dots">
+      <block wx:for="{{banner}}" wx:key="unique">
+        <view class="dot{{index === swiperCurrent ? ' active' : ''}}"></view>
+      </block>
     </view>
   </view>
 
-
   <view class='index-content'>
     <view class='content-ul'>
-      <view class='content-li'>
+      <view class='content-li' bindtap="gotoGoods">
         <view class='li-img'>
-          <image src='/pages/images/goods.png' class=''></image>
+          <view class="iconfont icon-goods" style='color: #EE2C2C; font-size: 30px;'></view>
+          <!-- <image src='/pages/images/goods2.png' class=''></image> -->
         </view>
         <view class='li-text'>
           <text>商品管理</text>
@@ -41,7 +39,8 @@
       </view>
       <view class='content-li'>
         <view class='li-img'>
-          <image src='/pages/images/sale-order.png' class=''></image>
+          <view class="iconfont icon-xiaoshou" style='color: #FF7F24; font-size: 30px;'></view>
+          <!-- <image src='/pages/images/sale-order2.png' class=''></image> -->
         </view>
         <view class='li-text'>
           <text>销售单</text>
@@ -49,7 +48,8 @@
       </view>
       <view class='content-li li-right'>
         <view class='li-img'>
-          <image src='/pages/images/order.png' class=''></image>
+          <view class="iconfont icon-purchaseorder" style='color: #FFB90F; font-size: 30px;'></view>
+          <!-- <image src='/pages/images/order2.png' class=''></image> -->
         </view>
         <view class='li-text'>
           <text>采购单</text>
@@ -59,15 +59,15 @@
     <view class='content-ul'>
       <view class='content-li'>
         <view class='li-img'>
-          <image src='/pages/images/customer.png' class=''></image>
+          <view class="iconfont icon-kehuguanli" style='color: #87CEFA; font-size: 30px;'></view>
         </view>
         <view class='li-text'>
-          <text>用户管理</text>
+          <text>客户管理</text>
         </view>
       </view>
       <view class='content-li'>
         <view class='li-img'>
-          <image src='/pages/images/depot.png' class=''></image>
+          <view class="iconfont icon-kucunguanli" style='color: #FFB90F; font-size: 30px;'></view>
         </view>
         <view class='li-text'>
           <text>库存管理</text>
@@ -75,7 +75,7 @@
       </view>
       <view class='content-li li-right'>
         <view class='li-img'>
-          <image src='/pages/images/print.png' class=''></image>
+          <view class="iconfont icon-ico_print" style='color: #708090; font-size: 30px;'></view>
         </view>
         <view class='li-text'>
           <text>打印管理</text>
@@ -85,7 +85,7 @@
     <view class='content-ul'>
       <view class='content-li'>
         <view class='li-img'>
-          <image src='/pages/images/report.png' class=''></image>
+          <view class="iconfont icon-baobiao" style='color: #43CD80; font-size: 30px;'></view>
         </view>
         <view class='li-text'>
           <text>报表管理</text>
@@ -93,7 +93,7 @@
       </view>
       <view class='content-li'>
         <view class='li-img'>
-          <image src='/pages/images/store.png' class=''></image>
+          <view class="iconfont icon-shop" style='color: #EEDC82; font-size: 30px;'></view>
         </view>
         <view class='li-text'>
           <text>店铺信息</text>
@@ -101,14 +101,43 @@
       </view>
       <view class='content-li li-right'>
         <view class='li-img'>
-          <image src='/pages/images/wl.png' class=''></image>
+          <view class="iconfont icon-wuliu" style='color: #CD4F39; font-size: 30px;'></view>
         </view>
         <view class='li-text'>
           <text>物流管理</text>
         </view>
       </view>
     </view>
+  </view>
 
+  <view class="index-snu">
+    <view class="snu-title">SNU CHIC小程序商城</view>
+    <view class='content-ul' style="height: 80px;">
+      <view class='content-li' style="border: none;height: 80px;" bindtap='navigateToMiniProgram'>
+        <view class='li-img'>
+          <view class="iconfont icon-xiaochengxu" style='color: #1E90FF; font-size: 27px;'></view>
+        </view>
+        <view class='li-text' style=" border: none;">
+          <text>SNU CHIC</text>
+        </view>
+      </view>
+      <view class='content-li' style="border: none;height: 80px;">
+        <view class='li-img'>
+          <view class="iconfont icon-zhanghu" style='color: #F08080; font-size: 27px;'></view>
+        </view>
+        <view class='li-text'>
+          <text>账户信息</text>
+        </view>
+      </view>
+      <view class='content-li' style=" border: none;height: 80px;">
+        <view class='li-img'>
+          <view class="iconfont icon-yingxiaofengkong" style='color: #FF3030; font-size: 27px;'></view>
+        </view>
+        <view class='li-text'>
+          <text>营销活动</text>
+        </view>
+      </view>
+    </view>
   </view>
 
 </view>
