@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "规格选项",
+  "navigationBarBackgroundColor": "#fff",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {
+    "van-search": "../../packages/@vant/weapp/search/index",
+    "edit-dialog": "../../templates/editDialog/index",
+    "van-button": "../../packages/@vant/weapp/button/index",
+    "van-empty": "../../packages/@vant/weapp/empty/index"
+  }
+}

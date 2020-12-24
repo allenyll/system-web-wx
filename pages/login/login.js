@@ -63,7 +63,7 @@ Page({
         return
       }
       var user = res.object;
-      if (undefined == user) {
+      if (undefined === user) {
         dialog.dialog('警告', '授权失败!!!', false, '返回授权')
         return
       }
@@ -71,7 +71,7 @@ Page({
       //授权成功后，跳转进入小程序首页
       var page = that.data.param.page
       var url = that.data.param.url + '?id=' + escape(app.globalData.userInfo.id)
-      if ('order' == page) {
+      if ('order' === page) {
         url = url + '&type=' + that.data.param.type
       }
       wx.redirectTo({

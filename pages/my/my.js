@@ -88,7 +88,7 @@ Page({
         return
       }
       var user = res.object;
-      if (undefined == user) {
+      if (undefined === user) {
         dialog.dialog('警告', '授权失败!!!', false, '返回授权')
         reject('授权失败!!!')
         return

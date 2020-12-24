@@ -1,0 +1,16 @@
+{
+  "navigationBarTitleText": "添加商品",
+  "navigationBarBackgroundColor": "#fff",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {
+    "editor": "../../templates/editor/editor",
+    "i-drawer": "../../packages/iview/drawer/index",
+    "van-cell": "../../packages/@vant/weapp/cell/index",
+    "van-cell-group": "../../packages/@vant/weapp/cell-group/index",
+    "van-field": "../../packages/@vant/weapp/field/index",
+    "van-button": "../../packages/@vant/weapp/button/index",
+    "van-icon": "../../packages/@vant/weapp/icon/index",
+    "van-tree-select": "../../packages/@vant/weapp/tree-select/index",
+    "van-uploader": "../../packages/@vant/weapp/uploader/index"
+  }
+}

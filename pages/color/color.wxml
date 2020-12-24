@@ -1,0 +1,25 @@
+<view class="container" style="overflow-x: hidden;">
+  <edit-dialog show-modal = "{{showModal}}" modalTitle = "新增规格选项" bindsaveValue="saveColor"></edit-dialog>
+  <view class="v-search">
+    <view class="add" bindtap="addColor">
+      <view class="iconfont icon-jiahao2" style='color: #B5B5B5; font-size: 35px;'></view>
+    </view>
+    <view class="search">
+      <van-search value="{{ color }}" placeholder="请输入搜索颜色" bind:search="onSearch"
+  bind:cancel="onCancel" bind:clear="onClear" show-action action-text="重置"/>
+    </view>
+    <!-- <view class="condition" bindtap="confirm">
+      <view class="iconfont icon-shaixuan1" style='color: #B5B5B5; font-size: 30px;'></view>
+    </view> -->
+  </view>
+  <view wx:if="{{specOptions.length === 0}}">
+    <van-empty image="search" description="没有查询到颜色！" />
+  </view>
+  <view wx:if="{{specOptions.length > 0}}" class="sort-box">
+    <view class="item {{item.checked ? 'active' : ''}}" wx:for="{{specOptions}}" wx:key="cate-{{item.id}}" data-index="{{index}}" bindtap="selectItem">{{item.name}}
+    </view>
+  </view>
+  <view class="v-confirm" bindtap="confirmOptions">
+        确认
+  </view>
+</view>

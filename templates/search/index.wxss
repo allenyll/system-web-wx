@@ -1,0 +1,32 @@
+/* templates/index.wxss */
+.v-search {
+  width: 750rpx;
+  height: 100rpx;
+  display: flex;
+  background: #fff;
+  position: fixed;
+  z-index: 5;
+  border-bottom: 2rpx solid #d9d9d9;
+}
+
+.v-search .add {
+  width: 10%;
+  height: 100rpx;
+  line-height: 100rpx;
+  text-align: center;
+}
+
+.v-search .search {
+  width: 80%;
+}
+
+.search .van-search {
+  height: 100rpx;
+}
+
+.v-search .condition {
+  width: 10%;
+  height: 100rpx;
+  line-height: 100rpx;
+  text-align: center;
+}

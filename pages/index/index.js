@@ -46,7 +46,7 @@ Page({
     var that = this
     return new Promise((resolve, reject) => {
       http('/api-web/message/getMessageListByType', param, '', 'post').then(res => {
-        if (res.code == '100000') {
+        if (res.code === '100000') {
           that.setData({
             notices: res.data.messageList
           })
@@ -62,7 +62,7 @@ Page({
     var that = this
     return new Promise((resolve, reject) => {
       http('/api-web/ad/getAdList', param, '', 'post').then(res => {
-        if (res.code == '100000') {
+        if (res.code === '100000') {
           that.setData({
             banner: res.data.adList
           })
@@ -76,12 +76,12 @@ Page({
 
   gotoGoods: function() {
     var that = this;
-    if (app.globalData.userInfo == null) {
+    if (app.globalData.userInfo === null) {
       var url = '/pages/goods/goods'
       var query = {
         url: url,
         type: '',
-        page: 'point'
+        page: 'goods'
       }
       wx.navigateTo({
         url: '/pages/login/login?param=' + JSON.stringify(query),

@@ -5,8 +5,27 @@ App({
    */
   onLaunch: function () {
     var that = this;
-    that.globalData.windowHeight = wx.getSystemInfoSync().windowHeight
-    that.globalData.windowWidth = wx.getSystemInfoSync().windowWidth
+    // that.globalData.windowHeight = wx.getSystemInfoSync().windowHeight
+    // that.globalData.windowWidth = wx.getSystemInfoSync().windowWidth
+    let systemInfo = wx.getSystemInfoSync()
+	  // px转换到rpx的比例
+    let pxToRpxScale = 750 / systemInfo.windowWidth;
+    // 状态栏的高度
+    let ktxStatusHeight = systemInfo.statusBarHeight * pxToRpxScale
+    // 导航栏的高度
+    let navigationHeight = 44 * pxToRpxScale
+    // window的宽度
+    let ktxWindowWidth = systemInfo.windowWidth * pxToRpxScale
+    that.globalData.windowWidth = ktxWindowWidth
+    // window的高度
+    let ktxWindowHeight = systemInfo.windowHeight * pxToRpxScale
+    that.globalData.windowHeight =  ktxWindowHeight
+    // 屏幕的高度
+    let ktxScreentHeight = systemInfo.screenHeight * pxToRpxScale
+    that.globalData.screentHeight = ktxScreentHeight
+    // 底部tabBar的高度
+    let tabBarHeight = ktxScreentHeight - ktxStatusHeight - navigationHeight - ktxWindowHeight
+    that.globalData.tabBarHeight = tabBarHeight
     // wx.login({
     //   success: res => {
     //     if (res.code) {
@@ -61,7 +80,9 @@ App({
     limit: 10,
     isIphoneX: false,
     windowHeight: 0,
-    windowWidth: 0
+    windowWidth: 0,
+    screentHeight: 0,
+    tabBarHeight: 0
   },
   // 工具函数
   utils: Utils

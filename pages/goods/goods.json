@@ -5,6 +5,13 @@
   "usingComponents": {
     "van-search": "../../packages/@vant/weapp/search/index",
     "van-tab": "../../packages/@vant/weapp/tab/index",
-    "van-tabs": "../../packages/@vant/weapp/tabs/index"
+    "van-tabs": "../../packages/@vant/weapp/tabs/index",
+    "van-popup": "../../packages/@vant/weapp/popup/index",
+    "i-drawer": "../../packages/iview/drawer/index",
+    "van-dropdown-menu": "../../packages/@vant/weapp/dropdown-menu/index",
+    "van-dropdown-item": "../../packages/@vant/weapp/dropdown-item/index",
+    "van-cell": "../../packages/@vant/weapp/cell/index",
+    "van-cell-group": "../../packages/@vant/weapp/cell-group/index",
+    "van-empty": "../../packages/@vant/weapp/empty/index"
   }
 }

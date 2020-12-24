@@ -41,7 +41,17 @@ function getRecommend(callback) {
   })
 }
 
+// 获取点击参数
+function getDataSet(e, field) {
+  if (e.currentTarget.dataset[field]) {
+    return e.currentTarget.dataset[field]
+  } else {
+    return e.target.dataset[field]
+  }
+}
+
 module.exports = {
   formatTime: formatTime,
-  getRecommend: getRecommend
+  getRecommend: getRecommend,
+  getDataSet: getDataSet
 }

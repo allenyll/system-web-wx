@@ -1,4 +1,83 @@
 <view class="container">
+  <!-- <van-popup show="{{ show }}" position="right" custom-style="width: 100%">
+    
+  </van-popup> -->
+  <i-drawer mode="right" visible="{{show}}" bind:close="toggleDrawer">
+      <view class="pop-container" style="height: {{windowHeight}}rpx">
+        <view class="v-popup">
+          <view class="v-cell">
+            <view class="v-name">品牌</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ brand }}" options="{{ brandOption }}" data-type="brand" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view>
+          <view class="v-cell">
+            <view class="v-name">商品状态</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ status }}" options="{{ statusOption }}"  data-type="status" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view> 
+          <view class="v-cell">
+            <view class="v-name">启用状态</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ isUsed }}" options="{{ isUsedOption }}"  data-type="isUsed" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view>
+
+          <view class="v-cell" style="margin-top: 15rpx;">
+            <view class="v-name">年份</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ year }}" options="{{ yearOptions }}"  data-type="year" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view>
+          <view class="v-cell">
+            <view class="v-name">单位</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ unit }}" options="{{ unitOptions }}"  data-type="unit" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view> 
+          <view class="v-cell">
+            <view class="v-name">季节</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ season }}" options="{{ seasonOptions }}"  data-type="season" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view>
+          <!-- <view class="v-cell">
+            <view class="v-name">颜色</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ isUsed }}" options="{{ isUsedOption }}" />
+              </van-dropdown-menu>  
+            </view>
+          </view>
+          <view class="v-cell">
+            <view class="v-name">尺码</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ isUsed }}" options="{{ isUsedOption }}" />
+              </van-dropdown-menu>  
+            </view>
+          </view> -->
+
+          <view class="v-cell" style="bottom: 0;position: fixed; width: 630rpx;">
+            <view class="v-reset" bindtap="resetCondition">重置</view>
+            <view class="v-confirm" bindtap="confirmCondition">确定</view>
+          </view>
+        </view>
+      </view>
+  </i-drawer>
   <view class="v-search">
     <view class="add">
       <view class="iconfont icon-jiahao2" style='color: #B5B5B5; font-size: 35px;'></view>
@@ -7,21 +86,21 @@
       <van-search value="{{ value }}" placeholder="请输入搜索关键词" bind:search="onSearch"
   bind:cancel="onCancel" bind:clear="onClear"/>
     </view>
-    <view class="condition">
+    <view class="condition" bindtap="toggleDrawer">
       <view class="iconfont icon-shaixuan1" style='color: #B5B5B5; font-size: 30px;'></view>
     </view>
   </view>
   <view class="v-tabs">
     <view class="tabs-ul">
-      <view class="">1|2</view>
+      <view class="">{{totalSkuNum}}|{{totalStock}}</view>
       <view class="tabs-li-2">商品|库存</view>
     </view>
-    <view class="tabs-ul">
-      <view class="tabs-li-1">￥100</view>
+    <view class="tabs-ul" bindtap="showTotalCost">
+      <view class="tabs-li-1">￥{{cost}}万</view>
       <view class="tabs-li-2">库存成本</view>
     </view>
     <view class="tabs-ul">
-      <view class="">0</view>
+      <view class="" style="color: #FF8C00">{{totalWarnStock}}</view>
       <view class="tabs-li-2">库存预警</view>
     </view>
   </view>
@@ -36,28 +115,31 @@
   </view> -->
   <view class="con-tabs">
     <view class="sort-box">
-      <view class="item {{currentSortType == 'default' ? 'active' : ''}}" bindtap="openSortFilter" id="defaultSort">
+      <view class="item {{currentSortType === 'default' ? 'active' : ''}}" bindtap="openSortFilter" id="defaultSort">
         <text class="txt">综合</text>
       </view>
-      <view class="item by-price {{currentSortType == 'price' ? 'active' : ''}} {{currentSortOrder == 'asc'  ? 'asc' : 'desc'}}" bindtap="openSortFilter" id="priceSort">
+      <view class="item by-price {{currentSortType === 'price' ? 'active' : ''}} {{currentSortOrder === 'asc'  ? 'asc' : 'desc'}}" bindtap="openSortFilter" id="priceSort">
         <text class="txt">价格</text>
       </view>
-      <view class="item by-price {{currentSortType == 'goods_name' ? 'active' : ''}} {{currentSortOrder == 'asc'  ? 'asc' : 'desc'}}" bindtap="openSortFilter" id="nameSort">
+      <view class="item by-price {{currentSortType === 'goods_name' ? 'active' : ''}} {{currentSortOrder === 'asc'  ? 'asc' : 'desc'}}" bindtap="openSortFilter" id="nameSort">
         <text class="txt">名称</text>
       </view>
-      <view class="item by-price {{currentSortType == 'stock' ? 'active' : ''}} {{currentSortOrder == 'asc'  ? 'asc' : 'desc'}}" bindtap="openSortFilter" id="stockSort">
+      <view class="item by-price {{currentSortType === 'stock' ? 'active' : ''}} {{currentSortOrder === 'asc'  ? 'asc' : 'desc'}}" bindtap="openSortFilter" id="stockSort">
         <text class="txt">库存</text>
       </view>
-      <view class="item {{currentSortType == 'category' ? 'active' : ''}}" bindtap="openSortFilter" id="categoryFilter">
+      <view class="item {{currentSortType === 'category' ? 'active' : ''}}" bindtap="openSortFilter" id="categoryFilter">
         <text class="txt">分类</text>
       </view>
     </view>
     <view class="sort-box-category" wx-if="{{categoryFilter}}">
-      <view class="item {{item.checked ? 'active' : ''}}" wx:for="{{filterCategory}}" wx:key="cate-{{item.id}}" data-category-index="index" bindtap="selectCategory">{{item.name}}</view>
+      <view class="item {{item.checked ? 'active' : ''}}" wx:for="{{filterCategory}}" wx:key="cate-{{item.id}}" data-category-index="{{index}}" bindtap="selectCategory">{{item.name}}</view>
     </view>
   </view>
-  <scroll-view class='scroll'  scroll-y lower-threshold="200" style="height: {{windowHeight-140}}px;" bindscrolltolower="getMore" >
-    <view class="goods-item" wx:for="{{goodsList}}" wx:key="index"> 
+  <scroll-view class='scroll'  scroll-y lower-threshold="200" style="height: {{scrollHeight}}rpx;" bindscrolltolower="getMore" >
+    <view wx:if="{{goodsList.length === 0}}">
+      <van-empty image="search" description="没有查询到商品！" />
+    </view>
+    <view wx:if="{{goodsList.length > 0}}" class="goods-item" wx:for="{{goodsList}}" wx:key="index"> 
       <view class="goods-list">
         <view class="item" bindtouchstart="touchStart" bindtouchend="touchEnd" bindtap="deleteItem">
           <image class="img" src="{{item.fileUrl}}"></image>

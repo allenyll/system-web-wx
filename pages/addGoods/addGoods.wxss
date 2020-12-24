@@ -1,0 +1,123 @@
+/**goods.wxss**/
+page {
+  background-color: #f4f4f4;
+}
+
+.v-info {
+  width: 750rpx;
+}
+
+.v-base {
+  background: #fff;
+}
+
+.v-title {
+  height: 70rpx;
+  line-height: 70rpx;
+  margin-left: 20rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.pop-container {
+  width: 630rpx;
+  background: #f4f4f4;
+}
+
+.van-tree-select{
+  width: 750rpx;
+}
+
+.select-item {
+  width: 750rpx;
+  margin-top: 20rpx;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.s-item{
+  display: flex;
+  position: relative;
+  height: 60rpx;
+  width: 110rpx;
+  line-height: 60rpx;
+  text-align: center;
+  /* padding: 0px 20rpx; */
+  margin: 0px 0 10rpx 14rpx;
+  color: #333;
+  font-size: 20rpx;
+  border-radius: 32rpx;
+  background: #eee;
+}
+
+.s-name {
+  width: 110rpx;
+}
+
+.s-close {
+  position: absolute;
+  top: 0;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  right: 0;
+  color: #fff;
+  /* background: black; */
+  border-radius: 0 24rpx 0 0;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.v-pic {
+  width: 710rpx;
+  margin: 10rpx auto;
+}
+
+.pic-tips {
+  font-size: 20rpx;
+  margin-bottom: 20rpx;
+  background: #f4f4f4;
+  padding: 10rpx;
+  color: gray;
+}
+
+.pic-tips .v-tips {
+  padding-bottom: 8rpx;
+}
+
+.v-submit {
+  width: 720rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  color: #fff;
+  background: #0387FE;
+  text-align: center;
+  position: fixed;
+  z-index: 10;
+  bottom: 0;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+}
+
+
+.v-cell {
+  display: flex;
+  background: #fff;
+  height: 51px;
+  border-bottom: 2rpx solid #eee;
+}
+
+.v-reset {
+  width: 50%;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+}
+
+.v-confirm {
+  width: 50%;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  color: #fff;
+  background: #0387FE;
+}
