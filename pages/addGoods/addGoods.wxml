@@ -59,7 +59,7 @@
       </view>
       <view class="v-base" style="margin-top: 20rpx;">
         <view class="v-title">商品详情</view>
-        <editor bindContent="getHtml" option="{{option}}" bindinsertImage="insertImage" id="editor"/>
+        <editor bindContent="getHtml" option="{{option}}" bindinsertImage="insertImage" id="editor" style="height: auto;"/>
       </view>
       
     </view>

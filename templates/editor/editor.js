@@ -6,7 +6,7 @@ Component({
     formats: {},
     readOnly: false,
     placeholder: '输入文字...',
-    editorHeight: 300,
+    // editorHeight: 300,
     keyboardHeight: 0,
     isIOS: false
   },
@@ -47,11 +47,10 @@ Component({
         windowHeight,
         platform
       } = wx.getSystemInfoSync()
-      let editorHeight = keyboardHeight > 0 ? (windowHeight - keyboardHeight - toolbarHeight) : windowHeight
+      // let editorHeight = keyboardHeight > 0 ? (windowHeight - keyboardHeight - toolbarHeight) : windowHeight
       this.setData({
-        editorHeight,
-        keyboardHeight,
-        windowHeight
+        // editorHeight,
+        keyboardHeight
       })
     },
     calNavigationBarAndStatusBar() {

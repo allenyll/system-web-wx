@@ -3,7 +3,7 @@
   "navigationBarBackgroundColor": "#fff",
   "navigationBarTextStyle": "black",
   "usingComponents": {
-    "editor": "../../templates/editor/editor",
+    "editor": "../../templates/editorFix/index",
     "i-drawer": "../../packages/iview/drawer/index",
     "van-cell": "../../packages/@vant/weapp/cell/index",
     "van-cell-group": "../../packages/@vant/weapp/cell-group/index",

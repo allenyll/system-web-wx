@@ -1,10 +1,6 @@
+<editor id="editor" class="ql-container" placeholder="{{option.placeholder?option.placeholder:'请输入文字...'}}" bindstatuschange="onStatusChange" bindready="onEditorReady" bindinput="getContent" style="width:{{option.width}};height:{{option.height}};">
+</editor>
 
-<scroll-view scroll-y="true" style="height: {{windowHeight}}rpx;"> <!-- 根据需要设置滚动条 -->
-  <view class="container">
-    <editor id="editor" class="ql-container" placeholder="{{option.placeholder?option.placeholder:'请输入文字...'}}" bindstatuschange="onStatusChange" bindready="onEditorReady" bindinput="getContent" style="width:{{option.width}};height:{{option.height}};">
-    </editor>
-  </view>
-</scroll-view>
 <view class="toolbar" catchtouchend="format" hidden="{{keyboardHeight > 0 ? false : true}}" style="bottom: {{isIOS ? keyboardHeight : 0}}px">
 <!-- 官方案例 -->
   <!-- <i class="iconfont icon-charutupian" catchtouchend="insertImage"></i>

@@ -349,13 +349,13 @@ Page({
     })
     
   },
-  getHtml(e) {//从组件获取值
-    this.html = e.detail.content.html
+  getHtml: function(e) {//从组件获取值
+    this.setData({
+      html: e.detail.content.html
+    })
   },
-  submit() {
-    console.log('提交的富文本', this.html)
-  },
-  insertImage(){ //图片上传插入示例
+  insertImage: function(){ //图片上传插入示例
+    var that = this
     wx.chooseImage({
       count: 1,
       success: res => {
@@ -380,7 +380,7 @@ Page({
             // that.setData({ fileList });
             var data  = JSON.parse(res.data)
             if (data.code === '100000') {
-              this.selectComponent('#editor').insertSrc(data.data.url);//调用组件insertSrc方法
+              that.selectComponent('#editor').insertSrc(data.data.url);//调用组件insertSrc方法
             }
           }
         })
@@ -391,7 +391,8 @@ Page({
    * 提交商品
    */
   submitGoods: function() {
-
+    this.getHtml()
+    console.log(this.data.html)
     // 最后删除缓存，重置规格选项
     var list = this.data.specsList
     for (var i=0; i < list.length; i++) {
