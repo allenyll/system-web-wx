@@ -370,7 +370,6 @@ Page({
    * 笛卡尔积获取SKU
    */
   calcDescartes: function(array) {
-    console.log(array)
     if (array.length < 2) return array[0] || [];
     return [].reduce.call(array, function (col, set) {
         var res = [];
@@ -394,13 +393,11 @@ Page({
       selectSpecs.push(specsList[index].selectItems)
     }
     let specsOption = this.calcDescartes(selectSpecs)
-    console.log(specsOption)
     for (let index in specsOption) {
       let specArr = specsOption[index]
       let specValue = ''
       let obj = {}
       for (let key in specArr) {
-        console.log(specArr[0])
         let _id = specArr[key].id
         let _name = specArr[key].name
         if (!specValue) {
@@ -415,89 +412,13 @@ Page({
       skuList.push(obj)
     }
     console.log(skuList)
-    // const specOptionNameMap = JSON.parse(JSON.stringify(this.data.specOptionNameMap))
-    // // 只有一个规格
-    // if (specsList.length === 1) {
-    //   console.log(specsList[0])
-    //   const values = JSON.parse(JSON.stringify(specsList[0].selectItems))
-    //   console.log(values)
-    //   for (let i = 0; i < values.length; i++) {
-    //     skuList.push({
-    //       value0: specOptionNameMap[values[i]],
-    //       id0: values[i],
-    //       specValue: '[' + values[i] + ',' + specOptionNameMap[values[i]] + ']'
-    //     })
-    //   }
-    // } else if (specsList.length === 2) {
-    //   console.log(JSON.parse(JSON.stringify(specsList[0].selectItems)))
-    //   console.log(JSON.parse(JSON.stringify(specsList[0].selectItems)))
-    //   let values0 = JSON.parse(JSON.stringify(specsList[0].selectItems))
-    //   console.log(values0)
-    //   let values1 = JSON.parse(JSON.stringify(specsList[1].selectItems))
-    //   for (let i = 0; i < values0.length; i++) {
-    //     if (values1.length === 0) {
-    //       skuList.push({
-    //         value0: specOptionNameMap[values0[i]],
-    //         id0: values0[i],  
-    //         specValue: '[' + values0[i] + ',' + specOptionNameMap[values0[i]] + ']'
-    //       })
-    //       continue
-    //     }
-    //     for (let j = 0; j < values1.length; j++) {
-    //       skuList.push({
-    //         value0: specOptionNameMap[values0[i]],
-    //         id0: values0[i],
-    //         value1: specOptionNameMap[values1[j]],
-    //         id1: values1[j],
-    //         specValue: '[' + values0[i] + ',' + specOptionNameMap[values0[i]] + '];[' + values1[j] + ',' + specOptionNameMap[values1[j]] + ']'
-    //       })
-    //     }
-    //   }
-    // } else if (specsList.length === 3) {
-    //   const values0 = JSON.parse(JSON.stringify(specsList[0].selectItems))
-    //   const values1 = JSON.parse(JSON.stringify(specsList[1].selectItems))
-    //   const values2 = JSON.parse(JSON.stringify(specsList[2].selectItems))
-    //   for (let i = 0; i < values0.length; i++) {
-    //     if (values1.length === 0) {
-    //       skuList.push({
-    //         value0: specOptionNameMap[values0[i]],
-    //         id0: values0[i],
-    //         specValue: '[' + values0[i] + ',' + specOptionNameMap[values0[i]] + ']'
-    //       })
-    //       continue
-    //     }
-    //     for (let j = 0; j < values1.length; j++) {
-    //       if (values2.length === 0) {
-    //         skuList.push({
-    //           value0: specOptionNameMap[values0[i]],
-    //           id0: values0[i],
-    //           value1: specOptionNameMap[values1[j]],
-    //           id1: values1[j],
-    //           specValue: '[' + values0[i] + ',' + specOptionNameMap[values0[i]] + '];[' + values1[j] + ',' + specOptionNameMap[values1[j]] + ']'
-    //         })
-    //         continue
-    //       }
-    //       for (let k = 0; k < values2.length; k++) {
-    //         skuList.push({
-    //           value0: specOptionNameMap[values0[i]],
-    //           id0: values0[i],
-    //           value1: specOptionNameMap[values1[j]],
-    //           id1: values1[j],
-    //           value2: specOptionNameMap[values2[k]],
-    //           id2: values2[k],
-    //           specValue: '[' + values0[i] + ',' + specOptionNameMap[values0[i]] + '];[' + values1[j] + ',' + specOptionNameMap[values1[j]] + '];[' + values2[k] + ',' + specOptionNameMap[values2[k]] + ']'
-    //         })
-    //       }
-    //     }
-    //   }
-    // }
     this.setData({
       goods: {
         ...this.data.goods,
         skuStockList: skuList
       }
     })
-    console.log(this.data.goods.skuStockList)
+    console.log(this.data.goods)
   },
   /**
    * 文件上传
