@@ -24,7 +24,10 @@
         </van-cell-group>
       </view>
       <view class="v-base" style="margin-top: 20rpx;">
-        <view class="v-title">商品规格</view>
+        <view class="v-title" style="display: flex;">
+          <view class="v-title-tile">商品规格</view>
+          <view class="v-open" wx:if="{{categoryName}}"><van-button bindtap="resetSkuList" size="mini" plain type="info">生成SKU</van-button></view>
+        </view>
         <van-cell-group>
           <van-field model:value="{{categoryName}}" disabled label="所属分类" placeholder="请选择分类" required use-button-slot>
             <van-button slot="button" size="small" type="primary" bindtap="selectCategory">选择</van-button>
@@ -58,6 +61,97 @@
         </view>
       </view>
       <view class="v-base" style="margin-top: 20rpx;">
+        <view class="v-title" style="display: flex;">
+          <view class="v-title-tile">其他参数</view>
+          <view class="v-open" wx:if="{{!showMore}}"><text bindtap="showMore">点击展开...</text></view>
+          <view class="v-open" wx:if="{{showMore}}"><text bindtap="showMore">点击隐藏...</text></view>
+        </view>
+        <view wx:if="{{showMore}}">
+          <view class="v-item">
+            <view class="v-row">
+              <view class="v-col"><text style="color: red;">*</text>品牌</view>
+              <view class="v-col-2">
+                <picker-search list="{{brandList}}" _width="540rpx" _height="70rpx" bind:action="changeBrand" actualvalue="value" showvalue="label" defaultvalue="SNU"></picker-search>
+              </view>
+            </view>
+          </view>
+          <view class="v-item">
+            <view class="v-row">
+              <view class="v-col"><text style="color: red;">*</text>商品状态</view>
+              <view class="v-col-2">
+                <picker-search list="{{goodsStatusOptions}}" _width="540rpx" _height="70rpx" bind:action="changeGoodsStatus" actualvalue="value" showvalue="label" defaultvalue="上架"></picker-search>
+              </view>
+            </view>
+          </view>
+          <view class="v-item">
+            <view class="v-row">
+              <view class="v-col"><text style="color: red;">*</text>启用状态</view>
+              <view class="v-col-2" style="width: 540rpx; text-align: right;">
+                <van-switch checked="{{ goods.isUsedFlag }}" bind:change="onChangeIsUsed" />
+              </view>
+            </view>
+          </view>
+          <view class="v-item">
+            <view class="v-row">
+              <view class="v-col"><text style="color: red;">*</text>单位</view>
+              <view class="v-col-2">
+                <picker-search list="{{unitOptions}}" _width="540rpx" _height="70rpx" bind:action="changeUnit" actualvalue="value" showvalue="label" defaultvalue="件"></picker-search>
+              </view>
+            </view>
+          </view>
+          <view class="v-item">
+            <view class="v-row">
+              <view class="v-col">季节</view>
+              <view class="v-col-2">
+                <picker-search list="{{seasonOptions}}" _width="540rpx" _height="70rpx" bind:action="changeSeason" actualvalue="value" showvalue="label" defaultvalue=""></picker-search>
+              </view>
+            </view>
+          </view>
+          <view class="v-item">
+            <view class="v-row">
+              <view class="v-col"><text style="color: red;">*</text>是否新品</view>
+              <view class="v-col-2" style="width: 540rpx; text-align: right;">
+                <van-switch checked="{{ goods.isNewFlag }}" data-type="isNew" data-flag="isNewFlag" bind:change="onChangeType" />
+              </view>
+            </view>
+          </view>
+          <view class="v-item">
+            <view class="v-row">
+              <view class="v-col"><text style="color: red;">*</text>是否热卖</view>
+              <view class="v-col-2" style="width: 540rpx; text-align: right;">
+                <van-switch checked="{{ goods.isHotFlag }}" data-type="isHot" data-flag="isHotFlag" bind:change="onChangeType" />
+              </view>
+            </view>
+          </view>
+          <view class="v-item">
+            <view class="v-row">
+              <view class="v-col"><text style="color: red;">*</text>是否推荐</view>
+              <view class="v-col-2" style="width: 540rpx; text-align: right;">
+                <van-switch checked="{{ goods.isRecomFlag }}" data-type="isRecom" data-flag="isRecomFlag" bind:change="onChangeType" />
+              </view>
+            </view>
+          </view>
+          <view class="v-item">
+            <view class="v-row">
+              <view class="v-col"><text style="color: red;">*</text>是否精品</view>
+              <view class="v-col-2" style="width: 540rpx; text-align: right;">
+                <van-switch checked="{{ goods.isBestFlag }}" data-type="isBest" data-flag="isBestFlag" bind:change="onChangeType" />
+              </view>
+            </view>
+          </view>
+          <van-cell-group>
+            <van-field model:value="{{ goods.goodsSeq }}" label="排序" placeholder="0" required clearable />
+            <van-field model:value="{{ goods.stock }}" label="初始化库存" placeholder="0" clearable />
+            <van-field model:value="{{ goods.warningStock }}" label="告警库存" placeholder="0" clearable />
+            <van-field model:value="{{ goods.goodsIntegral }}" label="积分" placeholder="0" clearable />
+            <van-field model:value="{{ goods.giftGrowth }}" label="会员成长值" placeholder="0" clearable />
+            <van-field model:value="{{ goods.pointLimit }}" label="积分限购数量" placeholder="0" clearable />
+            <van-field model:value="{{ goods.goodsLabel }}" label="商品标签" placeholder="请输入商品标签" clearable />
+            <van-field model:value="{{ goods.goodsIntegral }}" label="积分" placeholder="0" clearable />
+          </van-cell-group>
+        </view>
+      </view>
+      <view class="v-base" style="margin-top: 20rpx;">
         <view class="v-title">商品详情</view>
         <editor bindContent="getHtml" option="{{option}}" bindinsertImage="insertImage" id="editor" style="height: auto;"/>
       </view>
@@ -67,4 +161,21 @@
   <view class="v-submit" bindtap="submitGoods">
         提交商品
   </view>
+
+  <!-- <van-action-sheet show="{{ reasonShow }}" title="选择" bind:close="onCloseReason">
+    <view>
+      <view class="cancel-list">
+        申请原因（必选）
+      </view>
+      <van-radio-group value="{{ reason }}">
+        <van-cell-group>
+          <view wx:for="{{ reasonList }}" wx:key="index">
+            <van-cell style="font-size: 26rpx;" title="{{ item.reason }}" clickable data-name="{{ item.reason }}" bind:click="onClickReason">
+              <van-radio slot="right-icon" name="{{ item.reason }}" />
+            </van-cell>
+          </view>
+        </van-cell-group>
+      </van-radio-group>
+    </view>
+  </van-action-sheet> -->
 </view>

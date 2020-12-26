@@ -84,6 +84,43 @@ page {
   padding-bottom: 8rpx;
 }
 
+.v-title-tile {
+  width: 50%;
+}
+
+.v-open {
+  width: 50%;
+  text-align: right;
+  margin-right: 36rpx;
+  color: #0387FE;
+}
+
+.v-item {
+  width: 100%;
+  height: 100rpx;
+  /* margin-bottom: 10px; */
+}
+
+.v-item .v-row{
+  width: 100%;
+  height: 100%;
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  box-sizing: border-box;
+  padding-left: 14rpx;
+  /* padding-right: 30rpx; */
+  background-size: 28px 28px !important
+}
+
+.v-item .v-row .v-col {
+  width: 22%;
+  font-size: 28rpx;
+  color: var(--field-label-color,#646566);
+}
+
 .v-submit {
   width: 720rpx;
   height: 80rpx;

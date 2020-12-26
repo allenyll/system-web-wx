@@ -4,6 +4,7 @@ const dialog = require('../../utils/dialog.js')  // 引入
 Page({
   data: {
     show: false,
+    showMore: false,
     param: {},
     specsList: [],
     showCategory: false,
@@ -14,14 +15,60 @@ Page({
     fileList: [],
     fileId: '',
     // 富文本相关
-    html: '',
     option: { 
       placeholder: '编写商品详情...', //占位符默认为 '请输入文字...'
       imgUp: false, //插入图片功能默认开启
       width: '100%', //默认宽100%
       height: '600rpx', //默认高200px
-    }
+    },
     // 富文本结束
+    brandList: [],
+    goodsStatusOptions: [],
+    unitOptions: [],
+    seasonOptions: [],
+    // 保存
+    goods: {
+      selectSkuPics: [],
+      goodsDesc: '',
+      unitId: '',
+      goodsName: '',
+      goodsCode: '',
+      goodsBarCode: '',
+      goodsLabel: '',
+      price: 0,
+      marketPrice: 0,
+      costPrice: 0,
+      stock: 0,
+      warningStock: 0,
+      goodsIntegral: 0,
+      goodsUrl: '',
+      goodsBrief: '',
+      season: '',
+      unit: '',
+      goodsSeq: 10,
+      isUsedFlag: true,
+      isUsed: 'SW1302',
+      status: '',
+      isSpec: 'SW1002',
+      isBestFlag: false,
+      isBest: 'SW1002',
+      isHotFlag: false,
+      isHot: 'SW1002',
+      isNewFlag: true,
+      isNew: 'SW1001',
+      isRecomFlag: true,
+      isRecom: 'SW1002',
+      saleNum: 0,
+      saleTime: '',
+      visitNum: 0,
+      appraiseNum: 0,
+      giftGrowth: 0,
+      pointLimit: 0,
+      weight: 0,
+      serviceIds: '',
+      keywords: '',
+      promotionType: 'SW2001'
+    }
   },
   onLoad: function(options) {
     this.setData({
@@ -29,11 +76,7 @@ Page({
       tabBarHeight: app.globalData.tabBarHeight,
       scrollHeight: app.globalData.windowHeight + app.globalData.tabBarHeight - 280
     })
-    this.getSnowFlakeId()
-    this.getDictList('SW16', 'unitOptions')
-    this.getDictList('SW17', 'seasonOptions')
-    // this.getSpecsList()
-    this.getCategory()
+    this.getData()
   },
   onShow: function() {
     var list = this.data.specsList
@@ -49,6 +92,19 @@ Page({
       specsList: list
     })
   },
+  getData: async function() {
+    await this.getBrandList()
+    this.getSnowFlakeId()
+    this.getSpecOptionList()
+    this.getDictList('SW14', 'goodsStatusOptions')
+    this.getDictList('SW16', 'unitOptions')
+    this.getDictList('SW17', 'seasonOptions')
+    // this.getSpecsList()
+    this.getCategory()
+  },
+  /**
+   * 获取主键
+   */
   getSnowFlakeId: function() {
     var param = {}
     http('/api-web/goods/getSnowFlakeId/', param, '', 'post').then(res => {
@@ -63,6 +119,41 @@ Page({
     })
   },
   /**
+   * 获取所有规格选项--前端数据封装
+   */
+  getSpecOptionList: function() {
+    http('/api-web/specOption/list/', '', '', 'post').then(res => {
+      if (res.code === '100000') {
+        this.setData({
+          specOptionNameMap: res.data.map
+        })
+      }
+    }).catch(res => {
+      dialog.dialog('错误', res.error + ',请联系客服', false, '确定')
+    })
+  },
+  /**
+   * 获取品牌列表
+   */
+  getBrandList: function() {
+    var param = {}
+    return new Promise((resolve, reject) => {
+      http('/api-web/brand/list/', param, '', 'post').then(res => {
+        if (res.code === '100000') {
+          this.setData({
+            brandList: res.data.list
+          })
+        }
+        resolve(res)
+      }).catch(res => {
+        dialog.dialog('错误', res.error + ',请联系客服', false, '确定')
+        resolve(res)
+      })
+    })
+    
+    
+  },
+  /**
    * 获取对应编码的字段项
    * @param {字典编码} code 
    * @param {赋值对象} data 
@@ -70,19 +161,19 @@ Page({
   getDictList: function(code, data) {
     var param = {}
     var options = [
-      {text: '全部', value: ''}
+      {label: '全部', value: ''}
     ]
     http('/api-sys/dict/list/' + code, param, '', 'post').then(res => {
       if (res.code === '100000') {
         var list = res.data.list
         for (var i=0; i < list.length; i++) {
           options.push({
-            text: list[i].label,
+            label: list[i].label,
             value: list[i].value
           })
         }
         this.setData({
-          [data]: options
+          [data]: list
         })
       }
     })
@@ -157,6 +248,8 @@ Page({
    * @param {*}
    */
   onClickItem({ detail = {} }) {
+     // 重置数据
+     this.removeCache()
     let activeId = detail.id;
     let categoryName = detail.name;
     if (this.data.activeId === detail.id ) {
@@ -165,6 +258,7 @@ Page({
     } else {
       this.getSpecsListCondition(activeId)
     }
+   
     this.setData({ 
       activeId: activeId,
       categoryName: categoryName,
@@ -272,6 +366,142 @@ Page({
       }
     })
   },
+  /**
+   * 笛卡尔积获取SKU
+   */
+  calcDescartes: function(array) {
+    console.log(array)
+    if (array.length < 2) return array[0] || [];
+    return [].reduce.call(array, function (col, set) {
+        var res = [];
+        col.forEach(function (c) {
+            set.forEach(function (s) {
+                var t = [].concat(Array.isArray(c) ? c : [c]);
+                t.push(s);
+                res.push(t);
+            })
+        });
+        return res;
+    });
+  },
+
+  resetSkuList() {
+    this.data.goods.skuStockList = []
+    const skuList = JSON.parse(JSON.stringify(this.data.goods.skuStockList))
+    const specsList = JSON.parse(JSON.stringify(this.data.specsList))
+    var selectSpecs = []
+    for (let index in specsList) {
+      selectSpecs.push(specsList[index].selectItems)
+    }
+    let specsOption = this.calcDescartes(selectSpecs)
+    console.log(specsOption)
+    for (let index in specsOption) {
+      let specArr = specsOption[index]
+      let specValue = ''
+      let obj = {}
+      for (let key in specArr) {
+        console.log(specArr[0])
+        let _id = specArr[key].id
+        let _name = specArr[key].name
+        if (!specValue) {
+          specValue = '[' + _id + ',' + _name + ']'
+        } else {
+          specValue += ';' + '[' + _id + ',' + _name + ']'
+        }
+        obj['id' + key] = _id
+        obj['value' + key] = _name
+        obj['specValue'] = specValue
+      }
+      skuList.push(obj)
+    }
+    console.log(skuList)
+    // const specOptionNameMap = JSON.parse(JSON.stringify(this.data.specOptionNameMap))
+    // // 只有一个规格
+    // if (specsList.length === 1) {
+    //   console.log(specsList[0])
+    //   const values = JSON.parse(JSON.stringify(specsList[0].selectItems))
+    //   console.log(values)
+    //   for (let i = 0; i < values.length; i++) {
+    //     skuList.push({
+    //       value0: specOptionNameMap[values[i]],
+    //       id0: values[i],
+    //       specValue: '[' + values[i] + ',' + specOptionNameMap[values[i]] + ']'
+    //     })
+    //   }
+    // } else if (specsList.length === 2) {
+    //   console.log(JSON.parse(JSON.stringify(specsList[0].selectItems)))
+    //   console.log(JSON.parse(JSON.stringify(specsList[0].selectItems)))
+    //   let values0 = JSON.parse(JSON.stringify(specsList[0].selectItems))
+    //   console.log(values0)
+    //   let values1 = JSON.parse(JSON.stringify(specsList[1].selectItems))
+    //   for (let i = 0; i < values0.length; i++) {
+    //     if (values1.length === 0) {
+    //       skuList.push({
+    //         value0: specOptionNameMap[values0[i]],
+    //         id0: values0[i],  
+    //         specValue: '[' + values0[i] + ',' + specOptionNameMap[values0[i]] + ']'
+    //       })
+    //       continue
+    //     }
+    //     for (let j = 0; j < values1.length; j++) {
+    //       skuList.push({
+    //         value0: specOptionNameMap[values0[i]],
+    //         id0: values0[i],
+    //         value1: specOptionNameMap[values1[j]],
+    //         id1: values1[j],
+    //         specValue: '[' + values0[i] + ',' + specOptionNameMap[values0[i]] + '];[' + values1[j] + ',' + specOptionNameMap[values1[j]] + ']'
+    //       })
+    //     }
+    //   }
+    // } else if (specsList.length === 3) {
+    //   const values0 = JSON.parse(JSON.stringify(specsList[0].selectItems))
+    //   const values1 = JSON.parse(JSON.stringify(specsList[1].selectItems))
+    //   const values2 = JSON.parse(JSON.stringify(specsList[2].selectItems))
+    //   for (let i = 0; i < values0.length; i++) {
+    //     if (values1.length === 0) {
+    //       skuList.push({
+    //         value0: specOptionNameMap[values0[i]],
+    //         id0: values0[i],
+    //         specValue: '[' + values0[i] + ',' + specOptionNameMap[values0[i]] + ']'
+    //       })
+    //       continue
+    //     }
+    //     for (let j = 0; j < values1.length; j++) {
+    //       if (values2.length === 0) {
+    //         skuList.push({
+    //           value0: specOptionNameMap[values0[i]],
+    //           id0: values0[i],
+    //           value1: specOptionNameMap[values1[j]],
+    //           id1: values1[j],
+    //           specValue: '[' + values0[i] + ',' + specOptionNameMap[values0[i]] + '];[' + values1[j] + ',' + specOptionNameMap[values1[j]] + ']'
+    //         })
+    //         continue
+    //       }
+    //       for (let k = 0; k < values2.length; k++) {
+    //         skuList.push({
+    //           value0: specOptionNameMap[values0[i]],
+    //           id0: values0[i],
+    //           value1: specOptionNameMap[values1[j]],
+    //           id1: values1[j],
+    //           value2: specOptionNameMap[values2[k]],
+    //           id2: values2[k],
+    //           specValue: '[' + values0[i] + ',' + specOptionNameMap[values0[i]] + '];[' + values1[j] + ',' + specOptionNameMap[values1[j]] + '];[' + values2[k] + ',' + specOptionNameMap[values2[k]] + ']'
+    //         })
+    //       }
+    //     }
+    //   }
+    // }
+    this.setData({
+      goods: {
+        ...this.data.goods,
+        skuStockList: skuList
+      }
+    })
+    console.log(this.data.goods.skuStockList)
+  },
+  /**
+   * 文件上传
+   */
   uploadFile: function(event) {
     var that = this
     const { file } = event.detail
@@ -323,6 +553,9 @@ Page({
       },
     });
   },
+  /**
+   * 删除文件
+   */
   deleteFile: function(e) {
     var that = this
     wx.showModal({
@@ -349,9 +582,105 @@ Page({
     })
     
   },
+  /**
+   * 展示更多参数
+   */
+  showMore: function() {
+    this.setData({
+      showMore: !this.data.showMore
+    })
+  },
+  /**
+   * 选择品牌
+   * @param {*} e 
+   */
+  changeBrand: function(e) {///自定义方法
+    this.setData({
+      goods: {
+        ...this.data.goods,
+        brandId: e.detail.id
+      }
+    })
+  },
+  /**
+   * 选择商品状态
+   * @param {*} e 
+   */
+  changeGoodsStatus: function(e) {///自定义方法
+    this.setData({
+      goods: {
+        ...this.data.goods,
+        status: e.detail.id
+      }
+    })
+  },
+  /**
+   * 修改启用状态
+   * @param {*} e 
+   */
+  onChangeIsUsed: function(e) {
+    let isUsed = 'SW1302'
+    if (!e.detail) {
+      isUsed = 'SW1301'
+    }
+    this.setData({
+      goods: {
+        ...this.data.goods,
+        isUsedFlag: e.detail,
+        isUsed: isUsed
+      }
+    })
+  },
+  onChangeType: function(e) {
+    console.log(e)
+    let type = e.currentTarget.dataset.type
+    let flag = e.currentTarget.dataset.flag
+    let value = 'SW1001'
+    if (!e.detail) {
+      value = 'SW1002'
+    }
+    this.setData({
+      goods: {
+        ...this.data.goods,
+        [flag]: e.detail,
+        [type]: value
+      }
+    })
+    console.log(this.data.goods)
+  },
+  /**
+   * 选择单位
+   * @param {*} e 
+   */
+  changeUnit: function(e) {///自定义方法
+    this.setData({
+      goods: {
+        ...this.data.goods,
+        unit: e.detail.id
+      }
+    })
+  },
+  /**
+   * 选择季节
+   * @param {*} e 
+   */
+  changeSeason: function(e) {///自定义方法
+    this.setData({
+      goods: {
+        ...this.data.goods,
+        season: e.detail.id
+      }
+    })
+  },
+  /**
+   * 绑定商品详情
+   */
   getHtml: function(e) {//从组件获取值
     this.setData({
-      html: e.detail.content.html
+      goods: {
+        ...this.data.goods,
+        goodsDesc: e.detail.content.html
+      }
     })
   },
   insertImage: function(){ //图片上传插入示例
@@ -391,9 +720,11 @@ Page({
    * 提交商品
    */
   submitGoods: function() {
-    this.getHtml()
     console.log(this.data.html)
     // 最后删除缓存，重置规格选项
+    this.removeCache()
+  },
+  removeCache: function() {
     var list = this.data.specsList
     for (var i=0; i < list.length; i++) {
       wx.removeStorageSync(list[i].specId)
