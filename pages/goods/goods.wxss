@@ -43,7 +43,7 @@ page {
 .v-cell {
   display: flex;
   background: #fff;
-  height: 51px;
+  /* height: 51px; */
   border-bottom: 2rpx solid #eee;
 }
 
@@ -202,6 +202,7 @@ page {
   height: auto;
   overflow: hidden;
   width: 100%;
+  border-bottom: 1px solid #e1e1e1;
 }
 
 .goods-list{
@@ -209,33 +210,40 @@ page {
   height: auto;
   overflow: hidden;
   background: #fff;
-  padding-left: 30rpx;
-  border-bottom: 1px solid #e1e1e1;
 }
 
 .goods-list .item{
-  height: 160rpx;
-  width: 720rpx;
+  display: flex;
+  width: 960rpx;
   background: #fff;
-  padding: 30rpx 30rpx 30rpx 0;
   border-bottom: 1px solid #e1e1e1;
+  padding-left: 30rpx;
+  transition: margin-left 0.2s ease-in-out;
 }
 
 .item:last-child{
   border-bottom: 1px solid #fff;
 }
 
+.v-goods-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  width: 725rpx;
+  box-sizing: border-box;
+}
+
 .item .img{
   float: left;
-  width: 150rpx;
-  height: 150rpx;
+  width: 180rpx;
+  height: 180rpx;
   border-radius: 16rpx;
 }
 
 .item .info{
   float: right;
-  width: 540rpx;
-  height: 150rpx;
+  width: 560rpx;
+  /* height: 160rpx; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -245,7 +253,7 @@ page {
 .item .info .name{
   font-size: 28rpx;
   color: #333;
-  line-height: 40rpx;
+  /* line-height: 40rpx; */
 }
 
 
@@ -271,8 +279,27 @@ page {
 
 .price .price-ul .price-li-1{
   color: #FFA500;
+  font-size: 24rpx;
 }
 
 .price .price-ul .price-li-2{
   color: #888;
+}
+
+.v-edit {
+  width: 120rpx;
+  line-height: 220rpx;
+  text-align: center;
+  background: #FFA500;
+  font-size: 24rpx;
+  color: #fff;
+}
+
+.v-delete {
+  width: 120rpx;
+  line-height: 220rpx;
+  text-align: center;
+  background: #e64340;
+  font-size: 24rpx;
+  color: #fff;
 }

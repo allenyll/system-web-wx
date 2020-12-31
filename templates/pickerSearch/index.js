@@ -49,9 +49,10 @@ Component({
     ready: function () { 
       // 有默认值，绑定默认值
       if (this.data.defaultvalue) {
-        var list = this.data.list2
+        var list = this.data.list
         for (let index in list) {
           if (list[index].label === this.data.defaultvalue) {
+            console.log("可搜索下拉框初始化默认值")
             this.bindchange({detail: {value: index}})
           }
         }
@@ -62,6 +63,19 @@ Component({
   },
   created(e) {
     _self = this;
+  },
+  ready: function() {
+    // 在组件实例进入页面节点树时执行
+    // 有默认值，绑定默认值
+    if (this.data.defaultvalue) {
+      var list = this.data.list2
+      for (let index in list) {
+        if (list[index].label === this.data.defaultvalue) {
+          console.log("可搜索下拉框初始化默认值")
+          this.bindchange({detail: {value: index}})
+        }
+      }
+    }
   },
   /**
    * 组件的方法列表

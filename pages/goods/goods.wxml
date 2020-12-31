@@ -3,7 +3,7 @@
     
   </van-popup> -->
   <i-drawer mode="right" visible="{{show}}" bind:close="toggleDrawer">
-      <view class="pop-container" style="height: {{windowHeight}}rpx">
+      <view class="pop-container" style="height: {{windowHeight + tabBarHeight}}rpx">
         <view class="v-popup">
           <view class="v-cell">
             <view class="v-name">品牌</view>
@@ -79,7 +79,7 @@
       </view>
   </i-drawer>
   <view class="v-search">
-    <view class="add">
+    <view class="add" bindtap="addGoods">
       <view class="iconfont icon-jiahao2" style='color: #B5B5B5; font-size: 35px;'></view>
     </view>
     <view class="search">
@@ -135,36 +135,42 @@
       <view class="item {{item.checked ? 'active' : ''}}" wx:for="{{filterCategory}}" wx:key="cate-{{item.id}}" data-category-index="{{index}}" bindtap="selectCategory">{{item.name}}</view>
     </view>
   </view>
-  <scroll-view class='scroll'  scroll-y lower-threshold="200" style="height: {{scrollHeight}}rpx;" bindscrolltolower="getMore" >
+  <scroll-view class='scroll' enable-back-to-top  scroll-y lower-threshold="200" style="height: {{scrollHeight}}rpx;" bindscrolltolower="getMore" >
     <view wx:if="{{goodsList.length === 0}}">
       <van-empty image="search" description="没有查询到商品！" />
     </view>
     <view wx:if="{{goodsList.length > 0}}" class="goods-item" wx:for="{{goodsList}}" wx:key="index"> 
       <view class="goods-list">
-        <view class="item" bindtouchstart="touchStart" bindtouchend="touchEnd" bindtap="deleteItem">
-          <image class="img" src="{{item.fileUrl}}"></image>
-          <view class="info">
-            <view class="name">{{item.goodsName}}</view>
-            <view class="subtitle">{{item.goodsCode}}</view>
-            <view class="price">
-              <view class="price-ul">
-                <view class="price-li-1">￥{{item.price}}</view>
-                <view class="price-li-2">批发价</view>
-              </view>
-              <view class="price-ul">
-                <view class="price-li-1">￥{{item.marketPrice}}</view>
-                <view class="price-li-2">零售价</view>
-              </view>
-              <view class="price-ul">
-                <view class="price-li-1">{{item.stock}}</view>
-                <view class="price-li-2">库存</view>
-              </view>
-              <view class="price-ul" wx:if="{{false}}">
-                <view class="price-li-1">￥{{item.costPrice}}</view>
-                <view class="price-li-2">采购价</view>
+        <view class="item" bindtouchstart="touchStart" bindtouchend="touchEnd" data-index="{{index}}" bindtouchmove="touchMove" style="{{item.left}}">
+          <view class="v-goods-info">
+            <view>
+              <image class="img" src="{{item.fileUrl}}"></image>
+            </view>
+            <view class="info">
+              <view class="name">{{item.goodsName}}</view>
+              <view class="subtitle">{{item.goodsCode}}</view>
+              <view class="price">
+                <view class="price-ul">
+                  <view class="price-li-1">￥{{item.price}}</view>
+                  <view class="price-li-2">批发价</view>
+                </view>
+                <view class="price-ul">
+                  <view class="price-li-1">￥{{item.marketPrice}}</view>
+                  <view class="price-li-2">零售价</view>
+                </view>
+                <view class="price-ul">
+                  <view class="price-li-1">{{item.stock}}</view>
+                  <view class="price-li-2">库存</view>
+                </view>
+                <view class="price-ul" wx:if="{{false}}">
+                  <view class="price-li-1">￥{{item.costPrice}}</view>
+                  <view class="price-li-2">采购价</view>
+                </view>
               </view>
             </view>
           </view>
+          <view class="v-edit" data-index="{{index}}" data-id="{{item.id}}" bindtap="editGoods">编辑</view>
+          <view class="v-delete" data-index="{{index}}" data-id="{{item.id}}" bindtap="deleteGoods">删除</view>
         </view>
       </view>
     </view>

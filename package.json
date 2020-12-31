@@ -1,0 +1,23 @@
+{
+  "name": "system-web-wx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allenyll/system-web-wx.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allenyll/system-web-wx/issues"
+  },
+  "homepage": "https://github.com/allenyll/system-web-wx#readme",
+  "dependencies": {
+    "miniprogram-table-component": "^1.1.0"
+  }
+}

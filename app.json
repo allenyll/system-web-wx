@@ -1,8 +1,8 @@
 {
   "pages": [
-    "pages/addGoods/addGoods",
-    "pages/goods/goods",
     "pages/index/index",
+    "pages/goods/goods",
+    "pages/addGoods/addGoods",
     "pages/color/color",
     "pages/my/my",
     "pages/logs/logs",
@@ -12,6 +12,7 @@
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "SNU进销存",
+    "backgroundColor": "#fff",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {

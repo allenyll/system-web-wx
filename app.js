@@ -71,7 +71,7 @@ App({
     baseHttpUrl: 'http://localhost:10001',
     baseUrl: 'https://localhost',
     authUrl: 'https://localhost:8443',
-    // baseHttpUrl: 'http://www.allenyll.com',
+    // baseHttpUrl: 'http://www.allenyll.com:10001',
     // baseUrl: 'https://www.allenyll.com',
     // authUrl: 'https://www.allenyll.com:8443',
     bearer: 'Bearer ',

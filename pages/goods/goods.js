@@ -45,7 +45,8 @@ Page({
     unitOptions: [],
     unit: '',
     seasonOptions: [],
-    season: ''
+    season: '',
+    editAndDelBtnWidth: 120
   },
   onLoad: function(options) {
     this.setData({
@@ -53,12 +54,18 @@ Page({
       tabBarHeight: app.globalData.tabBarHeight,
       scrollHeight: app.globalData.windowHeight + app.globalData.tabBarHeight - 280
     })
+    this.initEleWidth()
     this.getDictList('SW16', 'unitOptions')
     this.getDictList('SW17', 'seasonOptions')
     this.getBrandList()
     this.getStock()
     this.getCategory()
     this.getGoodsList()
+  },
+  addGoods: function() {
+    wx.navigateTo({
+      url: '/pages/addGoods/addGoods?type=add&id='
+    })
   },
   onSearch: function(event) {
     this.setData({
@@ -124,6 +131,7 @@ Page({
         this.setData({
           'currentSortType': 'category',
           'categoryFilter': !this.data.categoryFilter,
+          // 'categoryId': '',
           'currentSortOrder': 'asc'
         });
         break;
@@ -186,77 +194,151 @@ Page({
   },
   selectCategory: function (event) {
     console.log(event)
-    let currentIndex = event.target.dataset.categoryIndex;
-    let filterCategory = this.data.filterCategory;
+    let currentIndex = event.target.dataset.categoryIndex
+    let filterCategory = this.data.filterCategory
     let currentCategory = null;
     for (let key in filterCategory) {
-      if (key === currentIndex) {
-        filterCategory[key].checked = true;
-        currentCategory = filterCategory[key];
+      if (Number(key) === currentIndex) {
+        if (filterCategory[key].checked) {
+          filterCategory[key].checked = false
+          this.setData({
+            categoryId: ''
+          });
+        } else {
+          filterCategory[key].checked = true
+          currentCategory = filterCategory[key]
+          this.setData({
+            categoryId: currentCategory.id
+          });
+        }
       } else {
-        filterCategory[key].checked = false;
+        filterCategory[key].checked = false
       }
     }
     this.setData({
       'filterCategory': filterCategory,
       'categoryFilter': false,
-      categoryId: currentCategory.id,
       page: 1,
       goodsList: []
     });
-    this.getGoodsList();
+    this.getGoodsList()
+  },
+
+  /**
+   * 获取元素自适应后的实际宽度
+   */
+  getEleWidth: function (w) {
+    var real = 0;
+    try {
+      var res = wx.getSystemInfoSync().windowWidth;
+      var scale = (750 / 2) / w;  //以宽度750px设计稿做宽度的自适应
+      // console.log(scale);
+      real = Math.floor(res / scale);
+      return real;
+    } catch (e) {
+      return false;
+      // Do something when catch error
+    }
+  },
+  
+  /**
+   * 初始化滑动显示的删除按钮
+   */
+  initEleWidth: function () {
+    var editAndDelBtnWidth = this.getEleWidth(this.data.editAndDelBtnWidth);
+    this.setData({
+      editAndDelBtnWidth: editAndDelBtnWidth
+    });
   },
 
   //按下事件开始  
   touchStart: function (e) {
+    console.log(e)
     let that = this;
-    that.setData({
-      touch_start: e.timeStamp
-    })
+    if (e.touches.length == 1) {
+      that.setData({
+        startX: e.touches[0].clientX
+      });
+    }
+  },
+  /**
+   * 滑动
+   */
+  touchMove: function (e) {
+    var index = e.currentTarget.dataset.index;
+    if (e.touches.length == 1) {
+      var moveX = e.touches[0].clientX;
+      var disX = this.data.startX - moveX;
+      var editAndDelBtnWidth = this.data.editAndDelBtnWidth;
+      var left = "";
+      if (disX == 0 || disX < 10) {//如果移动距离小于等于0，container位置不变
+        left = "margin-left:0px";
+      } else if (disX > 10) {//移动距离大于0，container left值等于手指移动距离
+        left = "margin-left:-" + disX + "px";
+        if (disX >= editAndDelBtnWidth) {
+          left = "left:-" + editAndDelBtnWidth + "px";
+        }
+      }
+      var list = this.data.goodsList;
+      if (index != "" && index != null) {
+        list[parseInt(index)].left = left;
+        this.setData({
+          goodsList: list
+        })
+      }
+    }
   },
   //按下事件结束  
   touchEnd: function (e) {
-    let that = this;
-    that.setData({
-      touch_end: e.timeStamp
+    var index = e.currentTarget.dataset.index;
+    if (e.changedTouches.length == 1) {
+      var endX = e.changedTouches[0].clientX;
+      var disX = this.data.startX - endX;
+      var editAndDelBtnWidth = this.data.editAndDelBtnWidth;
+      //如果距离小于删除按钮的1/2，不显示删除按钮
+      var left = disX > editAndDelBtnWidth / 2 ? "margin-left:-" + editAndDelBtnWidth + "px" : "margin-left:0px";
+      var list = this.data.goodsList;
+      if (index !== "" && index != null) {
+        list[parseInt(index)].left = left;
+        this.setData({
+          goodsList: list
+        })
+      }
+    }
+  },
+
+  editGoods: function(event) {
+    let id = event.currentTarget.dataset.id
+    wx.navigateTo({
+      url: '/pages/addGoods/addGoods?type=edit&id='+id
     })
-  }, 
+  },
 
   /**
-   * 长按编辑商品
+   * 删除商品
    * @param  event 
    */
-  deleteItem (event){
-    let that = this;
-    let footprint = event.currentTarget.dataset.footprint;
-    var touchTime = that.data.touch_end - that.data.touch_start;
-    console.log(touchTime);
-    //如果按下时间大于350为长按  
-    if (touchTime > 350) {
-      wx.showModal({
-        title: '',
-        content: '要删除所选足迹？',
-        success: function (res) {
-          if (res.confirm) {
-            var param = {
-              customerId: app.globalData.userInfo.id,
-              goodsId: footprint.goodsId,
-              type: footprint.type
+  deleteGoods: function(event){
+    let that = this
+    let id = event.currentTarget.dataset.id
+    wx.showModal({
+      title: '',
+      content: '确定删除改商品',
+      success: function (res) {
+        if (res.confirm) {
+          http('/api-web/goods/deleteGoods/'+id, '', null, 'post').then(res => {
+            if (res.code === '100000') {
+              dialog.showToast('删除成功','success', '', 2000);
+              that.setData({
+                page: 1,
+                goodsList: []
+              });
+              that.getGoodsList();
             }
-            http('/api-web/footprint/deleteFootprint/', param, null, 'post').then(res => {
-              if (res.success) {
-                dialog.showToast('删除成功','success', '', 2000);
-                that.getFootprintList();
-              }
-            })
-          }
+          })
         }
-      });
-    } else {
-      wx.navigateTo({
-        url: '/pages/goods/goods?id=' + footprint.goodsId,
-      });
-    }
+      }
+    });
   },
   setParam: function() {
     var that = this

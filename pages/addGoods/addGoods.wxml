@@ -11,28 +11,31 @@
     <view class="v-info">
       <view class="v-base">
         <van-cell-group>
-          <van-field model:value="{{ goods.goodsName }}" label="商品名称" placeholder="请输入商品名称" required clearable />
-          <van-field model:value="{{ goods.goodsCode }}" label="商品编码" placeholder="请输入商品编码" required clearable />
-          <van-field model:value="{{ goods.goodsBarCode }}" label="商品条形码" placeholder="请输入商品条形码" clearable />
+          <van-field value="{{ goods.goodsName }}" data-type="goodsName" bindinput="changeInput" label="商品名称" placeholder="请输入商品名称" required clearable />
+          <van-field value="{{ goods.goodsCode }}" data-type="goodsCode" bindinput="changeInput" label="商品编码" placeholder="请输入商品编码" required clearable />
+          <van-field value="{{ goods.goodsBarCode }}" data-type="goodsBarCode" bindinput="changeInput" label="商品条形码" placeholder="请输入商品条形码" clearable />
         </van-cell-group>
       </view>
       <view class="v-base" style="margin-top: 20rpx;">
         <van-cell-group>
-          <van-field model:value="{{ goods.costPrice }}" label="采购价" placeholder="￥0.00" required clearable />
-          <van-field model:value="{{ goods.price }}" label="商品价格" placeholder="￥0.00" required clearable />
-          <van-field model:value="{{ goods.marketPrice }}" label="零售价" placeholder="￥0.00" required clearable />
+          <van-field value="{{ goods.costPrice }}" data-type="costPrice" bindinput="changeInput" label="采购价" placeholder="￥0.00" required clearable />
+          <van-field value="{{ goods.price }}" data-type="price" bindinput="changeInput" label="商品价格" placeholder="￥0.00" required clearable />
+          <van-field value="{{ goods.marketPrice }}" data-type="marketPrice" bindinput="changeInput" label="零售价" placeholder="￥0.00" required clearable />
         </van-cell-group>
       </view>
       <view class="v-base" style="margin-top: 20rpx;">
         <view class="v-title" style="display: flex;">
           <view class="v-title-tile">商品规格</view>
-          <view class="v-open" wx:if="{{categoryName}}"><van-button bindtap="resetSkuList" size="mini" plain type="info">生成SKU</van-button></view>
+          <view class="v-open" wx:if="{{categoryName}}">
+            <van-button bindtap="resetSkuList" size="mini" plain type="info">生成SKU</van-button>
+            <van-button bindtap="showSku" wx:if="{{goods.skuStockList.length > 0}}" size="mini" plain type="info" style="margin-left: 10rpx;">初始化库存</van-button>
+          </view>
         </view>
         <van-cell-group>
-          <van-field model:value="{{categoryName}}" disabled label="所属分类" placeholder="请选择分类" required use-button-slot>
+          <van-field value="{{categoryName}}" disabled label="所属分类" placeholder="请选择分类" required use-button-slot>
             <van-button slot="button" size="small" type="primary" bindtap="selectCategory">选择</van-button>
           </van-field>
-          <van-tree-select wx:if="{{showCategory}}" style="position: absolute; z-index: 100;" items="{{ categoryTree }}" main-active-index="{{ mainActiveIndex }}" active-id="{{ activeId }}" bind:click-nav="onClickNav" bind:click-item="onClickItem"/>
+          <van-tree-select wx:if="{{showCategory}}" style="position: absolute; z-index: 100;" items="{{ categoryTree }}" main-active-index="{{ mainActiveIndex }}" active-id="{{ goods.categoryId }}" bind:click-nav="onClickNav" bind:click-item="onClickItem"/>
           <view class="options"  wx:for="{{specsList}}" wx:for-item="item">
             <view class="o-item">
               <van-field disabled label="{{item.specName}}" placeholder="不选择会设置默认属性" required use-button-slot>
@@ -46,6 +49,12 @@
                 <view class="s-close" bindtap="removeItem" data-id="{{items.id}}" data-specsid="{{items.specsId}}" data-name="{{items.name}}">x</view>
               </view>
             </view>
+          </view>
+          <view class="v-table" hidden="{{!showSku}}">
+            <view style="font-size: 24rpx; font-weight: bold;">
+              初始化库存
+            </view>
+            <table headers="{{tableHeader}}" bindrowClick="rowClick" bindsetSkuStock="setSkuStock" data="{{ row }}" stripe="{{ stripe }}"  border="{{ border }}"/>
           </view>
           <!-- <van-field label="尺码" placeholder="(不选择默认'均码')" required use-button-slot>
             <van-button slot="button" size="small" type="primary">选择</van-button>
@@ -66,12 +75,12 @@
           <view class="v-open" wx:if="{{!showMore}}"><text bindtap="showMore">点击展开...</text></view>
           <view class="v-open" wx:if="{{showMore}}"><text bindtap="showMore">点击隐藏...</text></view>
         </view>
-        <view wx:if="{{showMore}}">
+        <view hidden="{{!showMore}}">
           <view class="v-item">
             <view class="v-row">
               <view class="v-col"><text style="color: red;">*</text>品牌</view>
               <view class="v-col-2">
-                <picker-search list="{{brandList}}" _width="540rpx" _height="70rpx" bind:action="changeBrand" actualvalue="value" showvalue="label" defaultvalue="SNU"></picker-search>
+                <picker-search wx:if="{{brandList.length > 0}}" list="{{brandList}}" _width="540rpx" _height="70rpx" bind:action="changeBrand" actualvalue="value" showvalue="label" defaultvalue="SNU"></picker-search>
               </view>
             </view>
           </view>
@@ -79,7 +88,7 @@
             <view class="v-row">
               <view class="v-col"><text style="color: red;">*</text>商品状态</view>
               <view class="v-col-2">
-                <picker-search list="{{goodsStatusOptions}}" _width="540rpx" _height="70rpx" bind:action="changeGoodsStatus" actualvalue="value" showvalue="label" defaultvalue="上架"></picker-search>
+                <picker-search  wx:if="{{goodsStatusOptions.length > 0}}" list="{{goodsStatusOptions}}" _width="540rpx" _height="70rpx" bind:action="changeGoodsStatus" actualvalue="value" showvalue="label" defaultvalue="上架"></picker-search>
               </view>
             </view>
           </view>
@@ -95,7 +104,7 @@
             <view class="v-row">
               <view class="v-col"><text style="color: red;">*</text>单位</view>
               <view class="v-col-2">
-                <picker-search list="{{unitOptions}}" _width="540rpx" _height="70rpx" bind:action="changeUnit" actualvalue="value" showvalue="label" defaultvalue="件"></picker-search>
+                <picker-search  wx:if="{{unitOptions.length > 0}}" list="{{unitOptions}}" _width="540rpx" _height="70rpx" bind:action="changeUnit" actualvalue="value" showvalue="label" defaultvalue="件"></picker-search>
               </view>
             </view>
           </view>
@@ -103,7 +112,7 @@
             <view class="v-row">
               <view class="v-col">季节</view>
               <view class="v-col-2">
-                <picker-search list="{{seasonOptions}}" _width="540rpx" _height="70rpx" bind:action="changeSeason" actualvalue="value" showvalue="label" defaultvalue=""></picker-search>
+                <picker-search  wx:if="{{seasonOptions.length > 0}}" list="{{seasonOptions}}" _width="540rpx" _height="70rpx" bind:action="changeSeason" actualvalue="value" showvalue="label" defaultvalue=""></picker-search>
               </view>
             </view>
           </view>
@@ -140,14 +149,13 @@
             </view>
           </view>
           <van-cell-group>
-            <van-field model:value="{{ goods.goodsSeq }}" label="排序" placeholder="0" required clearable />
-            <van-field model:value="{{ goods.stock }}" label="初始化库存" placeholder="0" clearable />
-            <van-field model:value="{{ goods.warningStock }}" label="告警库存" placeholder="0" clearable />
-            <van-field model:value="{{ goods.goodsIntegral }}" label="积分" placeholder="0" clearable />
-            <van-field model:value="{{ goods.giftGrowth }}" label="会员成长值" placeholder="0" clearable />
-            <van-field model:value="{{ goods.pointLimit }}" label="积分限购数量" placeholder="0" clearable />
-            <van-field model:value="{{ goods.goodsLabel }}" label="商品标签" placeholder="请输入商品标签" clearable />
-            <van-field model:value="{{ goods.goodsIntegral }}" label="积分" placeholder="0" clearable />
+            <van-field value="{{ goods.goodsSeq }}" data-type="goodsSeq" bindinput="changeInput" label="排序" placeholder="0" required clearable />
+            <van-field value="{{ goods.stock }}" data-type="stock" bindinput="changeInput" label="初始化库存" placeholder="0" clearable />
+            <van-field value="{{ goods.warningStock }}" data-type="warningStock" bindinput="changeInput" label="告警库存" placeholder="0" clearable />
+            <van-field value="{{ goods.goodsIntegral }}" data-type="goodsIntegral" bindinput="changeInput" label="积分" placeholder="0" clearable />
+            <van-field value="{{ goods.giftGrowth }}" data-type="giftGrowth" bindinput="changeInput" label="会员成长值" placeholder="0" clearable />
+            <van-field value="{{ goods.pointLimit }}" data-type="pointLimit" bindinput="changeInput" label="积分限购数量" placeholder="0" clearable />
+            <van-field value="{{ goods.goodsLabel }}" data-type="goodsLabel" bindinput="changeInput" label="商品标签" placeholder="请输入商品标签" clearable />
           </van-cell-group>
         </view>
       </view>

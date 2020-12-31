@@ -5,6 +5,7 @@
   "usingComponents": {
     "picker-search": "../../templates/pickerSearch/index",
     "editor": "../../templates/editorFix/index",
+    "table": "../../templates/table/index",
     "i-drawer": "../../packages/iview/drawer/index",
     "van-cell": "../../packages/@vant/weapp/cell/index",
     "van-cell-group": "../../packages/@vant/weapp/cell-group/index",
