@@ -53,7 +53,7 @@ Page({
       selectSkuPics: [],
       skuStockList: [],
       id: '',
-      brandId: '',
+      brandId: '758418558159491072',
       categoryId: '',
       parentCategoryId: '',
       specCategoryId: '',
@@ -73,11 +73,11 @@ Page({
       goodsUrl: '',
       goodsBrief: '',
       season: '',
-      unit: '',
+      unit: 'SW1610',
       goodsSeq: 10,
       isUsedFlag: true,
       isUsed: 'SW1302',
-      status: '',
+      status: 'SW1401',
       isSpec: 'SW1002',
       isBestFlag: false,
       isBest: 'SW1002',
@@ -87,6 +87,7 @@ Page({
       isNew: 'SW1001',
       isRecomFlag: true,
       isRecom: 'SW1002',
+      isSpec: 'SW1001',
       saleNum: 0,
       saleTime: '',
       visitNum: 0,
@@ -108,6 +109,7 @@ Page({
       scrollHeight: app.globalData.windowHeight + app.globalData.tabBarHeight - 280,
       pageType: pageType,
       goods: {
+        ...this.data.goods,
         id: id
       }
     })
@@ -129,8 +131,14 @@ Page({
   },
   getData: async function() {
     if (this.data.pageType === 'add') {
+      wx.setNavigationBarTitle({
+        title: '新增商品'
+      })
       this.getSnowFlakeId()
     } else if (this.data.pageType === 'edit'){
+      wx.setNavigationBarTitle({
+        title: '编辑商品'
+      })
       this.getGoods()
     }
     await this.getBrandList()
@@ -169,7 +177,6 @@ Page({
           _specsList[key].showItem = true
           newSpecs.push(_specsList[key])
         }
-        console.log(newSpecs)
         this.setData({
           goods: {
             ...goodsInfo,
@@ -179,6 +186,27 @@ Page({
           fileList: fileList,
           specsList: newSpecs
         })
+        if ('SW1302' === goodsInfo.isUsed) {
+
+        }
+        this.onChangeIsUsed({detail: goodsInfo.isUsed === 'SW1302' ? true : false})
+        this.onChangeType({currentTarget: {dataset: {
+          type: 'isNew',
+          flag: 'isNewFlag'
+        }}, detail: goodsInfo.isNew === 'SW1001' ? true : false})
+        this.onChangeType({currentTarget: {dataset: {
+          type: 'isHot',
+          flag: 'isHotFlag'
+        }}, detail: goodsInfo.isHot === 'SW1001' ? true : false})
+        this.onChangeType({currentTarget: {dataset: {
+          type: 'isBest',
+          flag: 'isBestFlag'
+        }}, detail: goodsInfo.isBest === 'SW1001' ? true : false})
+        this.onChangeType({currentTarget: {dataset: {
+          type: 'isRecom',
+          flag: 'isRecomFlag'
+        }}, detail: goodsInfo.isRecom === 'SW1001' ? true : false})
+        this.setSkuStockList(this.data.specsList, goodsInfo.skuStockMapList)
       }
     })
   },
@@ -401,7 +429,7 @@ Page({
       specId: id
     }
     wx.navigateTo({
-      url: '/pages/color/color?param=' + JSON.stringify(query),
+      url: '/pages/specOption/specOption?param=' + JSON.stringify(query),
     })
     // var list = this.data.specsList
     // for (var i=0; i < list.length; i++) {
@@ -511,8 +539,6 @@ Page({
   dealSku: function(type) {
     const skuList = []
     const specsList = JSON.parse(JSON.stringify(this.data.specsList))
-    let headers = []
-    let rows = []
     if ('reset' === type) {
       var selectSpecs = []
       for (let index in specsList) {
@@ -552,59 +578,62 @@ Page({
       }
       console.log(skuList)
       console.log(this.data.goods)
-      
-      for(let key in specsList) {
-        var obj = {
-          prop: 'value'+key,
-          width: 140,
-          label: specsList[key].specName,
-          color: 'red',
-          disabled: true
-        }
-        headers.push(obj)
-      }
-      headers.push({
-        prop: 'skuPrice',
-        width: 140,
-        label: '价格',
-        color: '#646566'
-      })
-      headers.push({
-        prop: 'skuStock',
-        width: 140,
-        label: '库存',
-        color: '#646566'
-      })
-      headers.push({
-        prop: 'warnStock',
-        width: 150,
-        label: '库存预警',
-        color: '#646566'
-      })
-      console.log(headers)
-    
-      for (let index in skuList) {
-        let row = {}
-        for (let i = 0; i < specsList.length; i++) {
-          let _vKey = 'value' + i
-          let _idKey = 'id' + i
-          row[_vKey] = skuList[index][_vKey]
-          row[_idKey] = skuList[index][_idKey]
-          row['specValue'] = skuList[index]['specValue']
-        }
-        row['skuPrice'] = ''
-        row['skuStock'] = ''
-        row['warnStock'] = ''
-        rows.push(row)
-      }
-      console.log('row ' + rows)
+      this.setSkuStockList(specsList, skuList)
     }
     
     this.setData({
       goods: {
         ...this.data.goods,
         skuStockList: skuList
-      },
+      }
+    })
+  },
+  setSkuStockList: function(specsList, skuList) {
+    let headers = []
+    let rows = []
+    for(let key in specsList) {
+      var obj = {
+        prop: 'value'+key,
+        width: 140,
+        label: specsList[key].specName,
+        color: 'red',
+        disabled: true
+      }
+      headers.push(obj)
+    }
+    headers.push({
+      prop: 'skuPrice',
+      width: 140,
+      label: '价格',
+      color: '#646566'
+    })
+    headers.push({
+      prop: 'skuStock',
+      width: 140,
+      label: '库存',
+      color: '#646566'
+    })
+    headers.push({
+      prop: 'warnStock',
+      width: 150,
+      label: '库存预警',
+      color: '#646566'
+    })
+    for (let index in skuList) {
+      let row = {}
+      for (let i = 0; i < specsList.length; i++) {
+        let _vKey = 'value' + i
+        let _idKey = 'id' + i
+        row[_vKey] = skuList[index][_vKey]
+        row[_idKey] = skuList[index][_idKey]
+        row['specValue'] = skuList[index]['specValue']
+      }
+      row['skuPrice'] = skuList[index].skuPrice ? skuList[index].skuPrice : ''
+      row['skuStock'] = skuList[index].skuStock ? skuList[index].skuStock : ''
+      row['warnStock'] = skuList[index].warnStock ? skuList[index].warnStock : ''
+      rows.push(row)
+    }
+    this.setData({
       tableHeader: headers,
       row: rows
     })
@@ -758,7 +787,6 @@ Page({
     })
   },
   onChangeType: function(e) {
-    console.log(e)
     let type = e.currentTarget.dataset.type
     let flag = e.currentTarget.dataset.flag
     let value = 'SW1001'
@@ -772,7 +800,6 @@ Page({
         [type]: value
       }
     })
-    console.log(this.data.goods)
   },
   /**
    * 选择单位
@@ -847,10 +874,11 @@ Page({
    */
   submitGoods: function() {
     let goods = this.data.goods
+    const fileList = JSON.parse(JSON.stringify(this.data.fileList))
+    goods.selectSkuPics = fileList
     this.setData({
       goods: {
-        ...goods,
-        selectSkuPics: this.data.fileList
+        ...goods
       }
     })
     // 校验数据
@@ -859,21 +887,35 @@ Page({
       return
     }
     console.log(goods)
-    // 新增
-    http('/api-web/goods/createGoods', goods, '', 'post').then(res => {
-      if (res.code === '100000') {
-         // 最后删除缓存，重置规格选项
-        this.removeCache()
-        dialog.showToast('新增成功', '', '', 2000)
-        wx.navigateBack({
-          delta: 0,
-        })
-      } else {
-        dialog.dialog('错误', '新增失败，' + res.message + '，请联系客服', false, '确定')
-      }
-    }).catch(res => {
-      dialog.dialog('错误', res.error + '，请联系客服', false, '确定')
-    });
+    if (this.data.pageType === 'add') {
+      // 新增
+      http('/api-web/goods/createGoods', goods, '', 'post').then(res => {
+        if (res.code === '100000') {
+          // 最后删除缓存，重置规格选项
+          this.removeCache()
+          dialog.showToast('新增成功', '', '', 5000)
+          wx.navigateBack({})
+        } else {
+          dialog.dialog('错误', '新增失败，' + res.message + '，请联系客服', false, '确定')
+        }
+      }).catch(res => {
+        dialog.dialog('错误', res.error + '，请联系客服', false, '确定')
+      })
+    } else if (this.data.pageType === 'edit'){
+      // 编辑
+      http('/api-web/goods/updateGoods/' + goods.id, goods, '', 'post').then(res => {
+        if (res.code === '100000') {
+          // 最后删除缓存，重置规格选项
+          this.removeCache()
+          dialog.showToast('编辑成功', '', '', 5000)
+          wx.navigateBack({})
+        } else {
+          dialog.dialog('错误', '编辑失败，' + res.message + '，请联系客服', false, '确定')
+        }
+      }).catch(res => {
+        dialog.dialog('错误', res.error + '，请联系客服', false, '确定')
+      })
+    }
   },
   
   checkData: function(goods) {

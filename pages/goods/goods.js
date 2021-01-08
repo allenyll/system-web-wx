@@ -55,16 +55,23 @@ Page({
       scrollHeight: app.globalData.windowHeight + app.globalData.tabBarHeight - 280
     })
     this.initEleWidth()
+  },
+  onShow: function() {
+    this.removeSepcsCache()
     this.getDictList('SW16', 'unitOptions')
     this.getDictList('SW17', 'seasonOptions')
     this.getBrandList()
     this.getStock()
     this.getCategory()
+    this.setData({
+      page: 1,
+      goodsList: []
+    });
     this.getGoodsList()
   },
-  addGoods: function() {
+  clickAdd: function() {
     wx.navigateTo({
-      url: '/pages/addGoods/addGoods?type=add&id='
+      url: '/pages/goodsDetail/goodsDetail?type=add&id='
     })
   },
   onSearch: function(event) {
@@ -310,7 +317,7 @@ Page({
   editGoods: function(event) {
     let id = event.currentTarget.dataset.id
     wx.navigateTo({
-      url: '/pages/addGoods/addGoods?type=edit&id='+id
+      url: '/pages/goodsDetail/goodsDetail?type=edit&id='+id
     })
   },
 
@@ -323,7 +330,7 @@ Page({
     let id = event.currentTarget.dataset.id
     wx.showModal({
       title: '',
-      content: '确定删除改商品',
+      content: '确定删除该商品',
       success: function (res) {
         if (res.confirm) {
           http('/api-web/goods/deleteGoods/'+id, '', null, 'post').then(res => {
@@ -359,6 +366,20 @@ Page({
     console.log(param)
     this.setData({
       param: param
+    })
+  },
+   /**
+   * 获取规格列表
+   */
+  removeSepcsCache: function() {
+    var param = {}
+    http('/api-web/specs/list/', param, '', 'post').then(res => {
+      if (res.code === '100000') {
+        var list = res.data.list
+        for (var i=0; i < list.length; i++) {
+          wx.removeStorageSync(list[i].value)
+        }
+      }
     })
   },
    /**

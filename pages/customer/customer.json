@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "客户管理",
+  "navigationBarBackgroundColor": "#fff",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {
+    "v-search": "../../templates/search/index",
+    "van-empty": "../../packages/@vant/weapp/empty/index"
+  }
+}

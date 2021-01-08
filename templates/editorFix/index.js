@@ -1,7 +1,8 @@
 var time = require('../../utils/util.js');
 Component({
   properties:{
-    option: { type: Object }
+    option: { type: Object },
+    defaultvalue: {type: String}
   },
   data: {
     formats: {},
@@ -11,7 +12,13 @@ Component({
     _focus: false,
     index: 0
   },
-
+  lifetimes: {
+    // 生命周期函数，可以为函数，或一个在methods段中定义的方法名
+    ready: function () { 
+    },
+    moved: function () { },
+    detached: function () { },
+  },
   onLoad() {
 
   },
@@ -41,6 +48,14 @@ Component({
       //组件使用createSelectorQuery加上in(this)
       wx.createSelectorQuery().in(that).select('#editor').context(function (res) {
         that.editorCtx = res.context
+        if (that.data.defaultvalue  ) {
+          that.editorCtx.setContents({
+            //这里就是设置默认值的地方（html 后面给什么就显示什么）
+            //that.data.content 是我存在 data 里面的数据
+            //注意是 this 赋值的 that，如果用 this 就把上面的 function 改成箭头函数
+            html: that.data.defaultvalue  
+          });
+        }
       }).exec()
     },
   

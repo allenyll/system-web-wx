@@ -1,0 +1,40 @@
+<!--pages/saleOrder/saleOrder.wxml-->
+<view class="container">
+  <view class="v-info">
+    <view class="v-base">
+      <van-cell-group>
+        <van-field label="客户" value="{{ customerName }}" placeholder="请选择客户" bindinput="changCustomer" use-button-slot clearable>
+          <van-button slot="button" size="small" type="info" bindtap="selectCustomer">选择</van-button>
+        </van-field>
+        <view wx:if="{{ showCustomer }}" class="popup popover popover-light" style="margin: 0px;z-index: 2005; position: absolute; left: 100px;top: 55px;">
+          <view class="popover-arrow"></view>
+          <view class="popover-content">
+            <view class="pop-item" wx:if="{{ customerList.length > 0 }}" wx:for="{{ customerList }}" bindtap="goto" data-page='index' data-id="{{item.id}}" data-name="{{item.customerName}}" bindtap="clickCustomer">
+              <view class="pop-name">{{ item.customerName }}</view>
+            </view>
+            <view class="pop-item" wx:if="{{ !(customerList.length > 0) }}" >
+              <view class="pop-name">没有查询到此用户</view>
+            </view>
+          </view>
+        </view>
+        <van-overlay z-index="11" class="overlay" show="{{ showCustomer }}" bind:click="hideCustomer" />
+      </van-cell-group>
+      <view class="v-item">
+        <view class="v-row">
+          <view class="v-col"><text style="color: red;">*</text>仓库</view>
+          <view class="v-col-2">
+            <picker-search  wx:if="{{storeList.length > 0}}" list="{{storeList}}" _width="540rpx" _height="70rpx" bind:action="changeStore" actualvalue="value" showvalue="label" defaultvalue="338"></picker-search>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="v-base" style="margin-top: 20rpx;">
+      <view class="v-title" style="display: flex;">
+        <view class="v-title-tile">选择商品</view>
+        <view class="v-open">
+          <van-button bindtap="selectGoods" size="mini" plain type="info">请选择</van-button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

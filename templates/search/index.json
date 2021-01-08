@@ -1,4 +1,6 @@
 {
   "component": true,
-  "usingComponents": {}
+  "usingComponents": {
+    "van-search": "../../packages/@vant/weapp/search/index"
+  }
 }

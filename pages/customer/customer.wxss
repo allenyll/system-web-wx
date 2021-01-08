@@ -1,0 +1,22 @@
+/* pages/customer/customer.wxss */
+.v-item {
+  width: 710rpx;
+  /* height: 80rpx;
+  line-height: 80rpx; */
+  margin: 0 auto;
+  border-bottom: 2rpx solid #eee;
+  color: #0387FE
+}
+
+.v-name {
+  padding: 20rpx 0 10rpx 0;
+  height: 50rpx;
+  line-height: 50rpx;
+  font-size: 32rpx;
+}
+
+.v-phone {
+  padding-bottom: 22rpx;
+  color: #b2b2b2;
+  font-size: 22rpx;
+}

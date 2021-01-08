@@ -51,7 +51,7 @@ Component({
       if (this.data.defaultvalue) {
         var list = this.data.list
         for (let index in list) {
-          if (list[index].label === this.data.defaultvalue) {
+          if (list[index].value === this.data.defaultvalue) {
             console.log("可搜索下拉框初始化默认值")
             this.bindchange({detail: {value: index}})
           }

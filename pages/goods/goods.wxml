@@ -79,7 +79,7 @@
       </view>
   </i-drawer>
   <view class="v-search">
-    <view class="add" bindtap="addGoods">
+    <view class="add" bindtap="clickAdd">
       <view class="iconfont icon-jiahao2" style='color: #B5B5B5; font-size: 35px;'></view>
     </view>
     <view class="search">

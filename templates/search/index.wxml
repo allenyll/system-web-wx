@@ -1,15 +1,13 @@
 <!--templates/index.wxml-->
-<view class="container">
-  <view class="v-search">
-    <view class="add">
-      <view class="iconfont icon-jiahao2" style='color: #B5B5B5; font-size: 35px;'></view>
-    </view>
-    <view class="search">
-      <van-search value="{{ value }}" placeholder="请输入搜索关键词" bind:search="onSearch"
-  bind:cancel="onCancel" bind:clear="onClear"/>
-    </view>
-    <view class="condition" bindtap="toggleDrawer">
-      <view class="iconfont icon-shaixuan1" style='color: #B5B5B5; font-size: 30px;'></view>
-    </view>
+<view class="v-search">
+  <view class="add" wx:if="{{ showAdd }}" bindtap="clickAdd">
+    <view class="iconfont icon-jiahao2" style='color: #B5B5B5; font-size: 35px;'></view>
+  </view>
+  <view class="search">
+    <van-search value="{{ value }}" placeholder="请输入搜索关键词" bind:search="onSearch"
+bind:cancel="onCancel" bind:clear="onClear"/>
+  </view>
+  <view class="condition" wx:if="{{ showCondition }}" bindtap="toggleDrawer">
+    <view class="iconfont icon-shaixuan1" style='color: #B5B5B5; font-size: 30px;'></view>
   </view>
 </view>

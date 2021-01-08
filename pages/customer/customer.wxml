@@ -1,0 +1,13 @@
+<!--pages/customer/customer.wxml-->
+<view class="container">
+  <v-search showAdd="{{ true }}"  showCondition="{{ false }}" value="" bindonSearch="onSearch" bindonClear="onClear" bindonCancel="onCancel"  bindtoggleDrawer="toggleDrawer"  bindclickAdd="clickAdd" style="width: 750rpx"/>
+  <scroll-view class='scroll' enable-back-to-top  scroll-y lower-threshold="200" style="height: {{scrollHeight}}rpx; margin-top: 60px;" bindscrolltolower="getMore" >
+    <view wx:if="{{customerList.length === 0}}">
+      <van-empty image="search" description="没有查询到用户！" />
+    </view>
+    <view wx:if="{{customerList.length > 0}}" class="v-item" wx:for="{{customerList}}" wx:key="index" data-id="{{item.id}}" data-name="{{item.customerName}}" bindtap="selectCustomer">
+      <view class="v-name">{{item.customerName}}</view>
+      <view wx:if="{{ item.phone }}" class="v-phone">联系方式：{{item.phone}}</view>
+    </view>
+  </scroll-view>
+</view>

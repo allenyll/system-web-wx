@@ -1,0 +1,14 @@
+{
+  "navigationBarTitleText": "销售开单",
+  "navigationBarBackgroundColor": "#fff",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {
+    "picker-search": "../../templates/pickerSearch/index",
+    "van-overlay": "../../packages/@vant/weapp/overlay/index",
+    "van-cell": "../../packages/@vant/weapp/cell/index",
+    "van-cell-group": "../../packages/@vant/weapp/cell-group/index",
+    "van-field": "../../packages/@vant/weapp/field/index",
+    "van-button": "../../packages/@vant/weapp/button/index",
+    "van-icon": "../../packages/@vant/weapp/icon/index"
+  }
+}

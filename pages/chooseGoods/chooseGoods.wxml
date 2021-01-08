@@ -1,0 +1,244 @@
+<view class="container">
+  <!-- <van-popup show="{{ show }}" position="right" custom-style="width: 100%">
+    
+  </van-popup> -->
+  <i-drawer mode="right" visible="{{show}}" bind:close="toggleDrawer">
+      <view class="pop-container" style="height: {{windowHeight + tabBarHeight}}rpx">
+        <view class="v-popup">
+          <view class="v-cell">
+            <view class="v-name">品牌</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ brand }}" options="{{ brandOption }}" data-type="brand" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view>
+          <view class="v-cell">
+            <view class="v-name">商品状态</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ status }}" options="{{ statusOption }}"  data-type="status" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view> 
+          <view class="v-cell">
+            <view class="v-name">启用状态</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ isUsed }}" options="{{ isUsedOption }}"  data-type="isUsed" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view>
+
+          <view class="v-cell" style="margin-top: 15rpx;">
+            <view class="v-name">年份</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ year }}" options="{{ yearOptions }}"  data-type="year" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view>
+          <view class="v-cell">
+            <view class="v-name">单位</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ unit }}" options="{{ unitOptions }}"  data-type="unit" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view> 
+          <view class="v-cell">
+            <view class="v-name">季节</view>
+            <view class="v-content">
+              <van-dropdown-menu>
+                <van-dropdown-item value="{{ season }}" options="{{ seasonOptions }}"  data-type="season" bind:change="changeOptions"/>
+              </van-dropdown-menu>  
+            </view>
+          </view>
+          <view class="v-cell" style="bottom: 0;position: fixed; width: 630rpx;">
+            <view class="v-reset" bindtap="resetCondition">重置</view>
+            <view class="v-confirm" bindtap="confirmCondition">确定</view>
+          </view>
+        </view>
+      </view>
+  </i-drawer>
+  <view class="v-search">
+    <view class="add" bindtap="clickAdd">
+      <view class="iconfont icon-jiahao2" style='color: #B5B5B5; font-size: 35px;'></view>
+    </view>
+    <view class="search">
+      <van-search value="{{ value }}" placeholder="请输入搜索关键词" bind:search="onSearch"
+  bind:cancel="onCancel" bind:clear="onClear"/>
+    </view>
+    <view class="condition" bindtap="toggleDrawer">
+      <view class="iconfont icon-shaixuan1" style='color: #B5B5B5; font-size: 30px;'></view>
+    </view>
+  </view>
+  <view class="con-tabs">
+    <view class="sort-box">
+      <view class="item {{currentSortType === 'default' ? 'active' : ''}}" bindtap="openSortFilter" id="defaultSort">
+        <text class="txt">综合</text>
+      </view>
+      <view class="item by-price {{currentSortType === 'price' ? 'active' : ''}} {{currentSortOrder === 'asc'  ? 'asc' : 'desc'}}" bindtap="openSortFilter" id="priceSort">
+        <text class="txt">价格</text>
+      </view>
+      <view class="item by-price {{currentSortType === 'goods_name' ? 'active' : ''}} {{currentSortOrder === 'asc'  ? 'asc' : 'desc'}}" bindtap="openSortFilter" id="nameSort">
+        <text class="txt">名称</text>
+      </view>
+      <view class="item by-price {{currentSortType === 'stock' ? 'active' : ''}} {{currentSortOrder === 'asc'  ? 'asc' : 'desc'}}" bindtap="openSortFilter" id="stockSort">
+        <text class="txt">库存</text>
+      </view>
+      <view class="item {{currentSortType === 'category' ? 'active' : ''}}" bindtap="openSortFilter" id="categoryFilter">
+        <text class="txt">分类</text>
+      </view>
+    </view>
+    <view class="sort-box-category" wx-if="{{categoryFilter}}">
+      <view class="item {{item.checked ? 'active' : ''}}" wx:for="{{filterCategory}}" wx:key="cate-{{item.id}}" data-category-index="{{index}}" bindtap="selectCategory">{{item.name}}</view>
+    </view>
+  </view>
+  <scroll-view class='scroll' enable-back-to-top  scroll-y lower-threshold="200" style="height: {{scrollHeight}}rpx;" bindscrolltolower="getMore" >
+    <view wx:if="{{goodsList.length === 0}}">
+      <van-empty image="search" description="没有查询到商品！" />
+    </view>
+    <view wx:if="{{goodsList.length > 0}}" class="goods-item" wx:for="{{goodsList}}" wx:key="index"> 
+      <view class="goods-list">
+        <view class="item" data-index="{{index}}">
+          <view class="v-goods-info">
+            <view style="position: relative;">
+              <image class="img" src="{{item.fileUrl}}"></image>
+              <view class="v-num" wx:if="{{item.buyNumber > 0}}">已选：{{item.buyNumber}} 件</view>
+            </view>
+            <view class="info">
+              <view class="name">{{item.goodsName}}</view>
+              <view class="subtitle">{{item.goodsCode}}</view>
+              <view class="price">
+                <view class="price-ul">
+                  <view class="price-li-1">￥{{item.price}}</view>
+                </view>
+                <view class="price-ul">
+                  <view class="add-cart">
+                    <van-button slot="button" size="small" plain round icon="shopping-cart-o" type="info" data-id="{{ item.id }}" bindtap="addToCart">加入购物车</van-button>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="choose-btn">
+      <view class="popup-join-btn-l" bindtap="showCartInfo">
+        已选择（{{cartInfo.cartNum}}）
+      </view>
+      <view class="popup-join-btn-r" bindtap="confirmSelectGoods">
+        选好了
+      </view>
+    </view>
+    <view style= "margin-bottom: 0rpx" class="show-popup" wx:if="{{showAttr}}">
+      <view class="popup-mask" bindtap="closePopupTap"></view>
+      <view class="popup-contents">
+        <view class="pop-goods-info">
+          <view class="pop-img-box">
+            <image src="{{goods.fileUrl}}" class="goods-thumbnail" />
+          </view>
+          <view class="pop-goods-des">
+            <view class="pop-goods-price">¥ {{ goods.price }}</view>
+            <view class="pop-goods-title">商品编码：{{ goods.goodsCode }}</view>
+          </view>
+          <view class="pop-goods-close" bindtap="closePopupTap"></view>
+        </view>
+        <view class="size-label-box">
+          <block wx:for="{{specsList}}" wx:for-item="specs" wx:for-index="idx" wx:key="id">
+            <view class="label">
+              <view class="label-title">{{specs.specName}}</view>
+              <view wx:if="{{ specs.specName  === '颜色' }}" style="text-align: right; margin-right: 20rpx; width: 76%;">
+                颜色多选：<van-switch checked="{{ colorMore }}" size="12px" bind:change="changeColseMore"/>
+              </view>
+              <view wx:if="{{ specs.specName  === '尺码' }}" class="label-title">库存</view>
+              <view wx:if="{{ specs.specName  === '尺码' }}" class="label-title">购买数量</view>
+            </view>
+            <view class="label-item-box" wx:if="{{ specs.specName  !== '尺码' }}">
+              <view class="label-item {{item.active ? 'active' : '' }}" wx:for="{{specs.specOptionList}}" wx:key="id" bindtap="clickSpecValue" data-propertyindex="{{idx}}" data-propertyid="{{specs.specId}}" data-propertyname="{{specs.specName}}" data-propertychildindex="index"
+              data-propertychildid="{{item.id}}" data-propertychildname="{{item.name}}">
+                <view >
+                  {{item.name}}
+                </view>
+                <view  wx:if="{{ specs.specName  === '颜色' && item.totalNum > 0 }}" class="s-number" data-id="{{item.id}}" data-name="{{item.name}}">{{ item.totalNum }}</view>
+              </view>
+            </view>
+            <view class="label-item-box" wx:if="{{ specs.specName  !== '颜色' }}">
+              <view class="label-items" wx:for="{{specs.specOptionList}}" wx:key="id">
+                <view class="label-title" >
+                  <view class="label-item active" style="width: 60rpx;text-align: center;">
+                    {{item.name}}
+                  </view>
+                </view>
+                <view class="label-title">{{item.stockNum}}</view>
+                <view class="label-title"><van-stepper min="0" value="{{item.buyNum}}" bindminus="minusBuyNum"  bindplus="plusBuyNum" bindblur="changeBuyNum" data-id="{{item.id}}" integer /></view>
+              </view>
+            </view>
+          </block>
+        </view>
+        <view class="buy-num-box">
+          <view class="num-label">购买数量（全选）</view>
+          <view class="num-box">
+            <!-- <view class="num-jian {{buyNumber == buyNumMin ? 'hui': ''}}" bindtap="numJianTap">-</view>
+            <view class="num-input">
+              <input type="number" value="{{buyNumber}}" disabled/>
+            </view>
+            <view class="num-jia {{buyNumber== buyNumMax ? 'hui': ''}}" bindtap="numJiaTap">+</view> -->
+            <van-stepper min="0" input-width="40px" button-size="32px" value="{{buyNumber}}" bindminus="minusBuyTotalNum"  bindplus="plusBuyTotalNum" bindblur="changeBuyTotalNum" integer />
+          </view>
+        </view>
+        <view class="popup-btn">
+          <!-- <view wx:if="{{!hasSku}}" class="popup-join-btn" bindtap="">
+            暂无库存
+          </view> -->
+          <view class="popup-join-btn-l">
+            已选{{selectedSku}}款{{selectedNum}}件 <text style="font-size: 32rpx; color: #FFA500;">￥{{selectedPrice}}</text>
+          </view>
+          <view class="popup-join-btn-r" bindtap="bulidShopCarInfo">
+            确定
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  <view class="v-cart">
+    <van-action-sheet show="{{ cartShow }}" title="已选商品" bindclose="closeCartInfo">
+      <scroll-view>
+        <view class="v-goods-item"  wx:if="{{cartInfo.cartList.length > 0}}" wx:for="{{cartInfo.cartList}}" wx:for-item="item">
+          <view class="c-goods">
+            <view class="c-img">
+              <image class="img" src="{{item.pic}}"></image>
+            </view>
+            <view class="c-info">
+              <view class="c-goods-name">
+                <view class="name-col">{{item.name}}</view>
+                <view class="iconfont icon-shanchu2" style='color: #EE2C2C; font-size: 20px;margin-left: 20rpx;' bindtap="deleteGoods" data-goodsid="{{item.goodsId}}" ></view></view>
+              <view class="c-col">{{item.code}}</view>
+              <view class="c-col">小计：{{item.selectedSku}} 款{{item.buyNumber}} 件</view>
+            </view>
+          </view>
+          <view class="v-sku">
+              <view class="sku-item" wx:for="{{item.skuSelectList}}" wx:for-item="iitem">
+                <view class="icon"><view class="iconfont icon-shanchu5" style='color: #EE2C2C; font-size: 25px;margin-left: 20rpx;' bindtap="deleteSku" data-goodsid="{{item.goodsId}}" data-skuid="{{iitem.id}}" data-num="{{iitem.buyNum}}"></view></view>
+                <view class="v-item-specs"><text>{{iitem.spec}}</text></view>
+                <view class="v-item-cal"><van-stepper min="0" data-goodsid="{{item.goodsId}}" data-skuid="{{iitem.id}}" value="{{iitem.buyNum}}" bindminus="singleSkuMinus"  bindplus="singleSkuPlus" integer /></view>
+              </view>
+            </view>
+        </view>
+        <view class="v-goods-none" wx:if="{{cartInfo.cartList.length === 0}}">
+          暂无数据
+        </view>
+      </scroll-view>
+      <view class="popup-btn" style="margin-top: 50rpx;">
+        <view class="popup-join-btn-l" bindtap="closeCartInfo">
+          继续添加
+        </view>
+        <view class="popup-join-btn-r" bindtap="confirmSelectGoods">
+          选好了
+        </view>
+      </view>
+    </van-action-sheet>
+  </view>
+</view>

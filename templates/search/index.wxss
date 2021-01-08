@@ -17,7 +17,7 @@
 }
 
 .v-search .search {
-  width: 80%;
+  width: 100%;
 }
 
 .search .van-search {

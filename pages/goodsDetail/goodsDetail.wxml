@@ -80,7 +80,7 @@
             <view class="v-row">
               <view class="v-col"><text style="color: red;">*</text>品牌</view>
               <view class="v-col-2">
-                <picker-search wx:if="{{brandList.length > 0}}" list="{{brandList}}" _width="540rpx" _height="70rpx" bind:action="changeBrand" actualvalue="value" showvalue="label" defaultvalue="SNU"></picker-search>
+                <picker-search wx:if="{{brandList.length > 0}}" list="{{brandList}}" _width="540rpx" _height="70rpx" bind:action="changeBrand" actualvalue="value" showvalue="label" defaultvalue="{{goods.brandId}}"></picker-search>
               </view>
             </view>
           </view>
@@ -88,7 +88,7 @@
             <view class="v-row">
               <view class="v-col"><text style="color: red;">*</text>商品状态</view>
               <view class="v-col-2">
-                <picker-search  wx:if="{{goodsStatusOptions.length > 0}}" list="{{goodsStatusOptions}}" _width="540rpx" _height="70rpx" bind:action="changeGoodsStatus" actualvalue="value" showvalue="label" defaultvalue="上架"></picker-search>
+                <picker-search  wx:if="{{goodsStatusOptions.length > 0}}" list="{{goodsStatusOptions}}" _width="540rpx" _height="70rpx" bind:action="changeGoodsStatus" actualvalue="value" showvalue="label" defaultvalue="{{goods.status}}"></picker-search>
               </view>
             </view>
           </view>
@@ -104,7 +104,7 @@
             <view class="v-row">
               <view class="v-col"><text style="color: red;">*</text>单位</view>
               <view class="v-col-2">
-                <picker-search  wx:if="{{unitOptions.length > 0}}" list="{{unitOptions}}" _width="540rpx" _height="70rpx" bind:action="changeUnit" actualvalue="value" showvalue="label" defaultvalue="件"></picker-search>
+                <picker-search  wx:if="{{unitOptions.length > 0}}" list="{{unitOptions}}" _width="540rpx" _height="70rpx" bind:action="changeUnit" actualvalue="value" showvalue="label" defaultvalue="{{goods.unit}}"></picker-search>
               </view>
             </view>
           </view>
@@ -112,7 +112,7 @@
             <view class="v-row">
               <view class="v-col">季节</view>
               <view class="v-col-2">
-                <picker-search  wx:if="{{seasonOptions.length > 0}}" list="{{seasonOptions}}" _width="540rpx" _height="70rpx" bind:action="changeSeason" actualvalue="value" showvalue="label" defaultvalue=""></picker-search>
+                <picker-search  wx:if="{{seasonOptions.length > 0}}" list="{{seasonOptions}}" _width="540rpx" _height="70rpx" bind:action="changeSeason" actualvalue="value" showvalue="label" defaultvalue="{{goods.season}}"></picker-search>
               </view>
             </view>
           </view>
@@ -156,12 +156,13 @@
             <van-field value="{{ goods.giftGrowth }}" data-type="giftGrowth" bindinput="changeInput" label="会员成长值" placeholder="0" clearable />
             <van-field value="{{ goods.pointLimit }}" data-type="pointLimit" bindinput="changeInput" label="积分限购数量" placeholder="0" clearable />
             <van-field value="{{ goods.goodsLabel }}" data-type="goodsLabel" bindinput="changeInput" label="商品标签" placeholder="请输入商品标签" clearable />
+            <van-field value="{{ goods.goodsBrief }}" label="商品简介" type="textarea" data-type="goodsBrief" bindinput="changeInput"  placeholder="请输入简介" autosize clearable />
           </van-cell-group>
         </view>
       </view>
       <view class="v-base" style="margin-top: 20rpx;">
         <view class="v-title">商品详情</view>
-        <editor bindContent="getHtml" option="{{option}}" bindinsertImage="insertImage" id="editor" style="height: auto;"/>
+        <editor bindContent="getHtml" defaultvalue="{{goods.goodsDesc}}" option="{{option}}" bindinsertImage="insertImage" id="editor" style="height: auto;"/>
       </view>
       
     </view>
