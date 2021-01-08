@@ -941,16 +941,16 @@ Page({
             }
           }
         }
-      }
-      if ('plus' === type) {
-        goods.buyNumber += 1
-      } else {
-        goods.buyNumber -= 1
-        if (goods.buyNumber < 0) {
-          goods.buyNumber = 0
+        if ('plus' === type) {
+          goods.buyNumber += 1
+        } else {
+          goods.buyNumber -= 1
+          if (goods.buyNumber < 0) {
+            goods.buyNumber = 0
+          }
         }
+        this.setGoodsList(goods)
       }
-      this.setGoodsList(goods)
     }
     console.log(cartList)
     this.setData({
